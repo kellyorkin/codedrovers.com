@@ -133,6 +133,24 @@
   .layer.overlay .lname{color:var(--dust)}
   .layer.overlay .num{color:var(--dust-dim)}
 
+  /* grammar 1.5 — subordinate sub-row fused to the Ontology bedrock */
+  .sublayer{
+    display:grid;grid-template-columns:30px 1fr;gap:11px;
+    margin-top:12px;padding:11px 0 2px 13px;
+    border-top:1px dashed var(--line);
+    border-left:1px solid var(--line-soft);
+  }
+  .sublayer .snum{
+    font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--dust-dim);
+    letter-spacing:.04em;padding-top:2px;
+  }
+  .sublayer .sname{
+    font-family:"Zilla Slab",serif;font-weight:600;font-size:15px;color:var(--dust);
+    letter-spacing:.005em;
+  }
+  .sublayer .sdesc{display:block;color:var(--dust-dim);font-size:13px;line-height:1.5;margin-top:2px}
+  .sublayer .sdesc b{color:var(--patina);font-weight:500}
+
   /* ---- boundary cards ---- */
   .cards{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:40px;background:var(--line);border:1px solid var(--line);border-radius:3px;overflow:hidden}
   @media(max-width:680px){.cards{grid-template-columns:1fr}}
@@ -261,16 +279,20 @@
         <text x="10" y="83" font-family="IBM Plex Mono, monospace" font-size="10" fill="#A89B85" letter-spacing="1">PATTERNS</text>
         <!-- Capability (the live layer, brass) -->
         <path d="M0 100 Q80 90 150 98 T300 96 L300 144 L0 144 Z" fill="#2A261F" stroke="#C8893A" stroke-width="1.4"/>
-        <text x="10" y="119" font-family="IBM Plex Mono, monospace" font-size="10" fill="#C8893A" letter-spacing="1">CAPABILITY</text>
-        <text x="10" y="133" font-family="IBM Plex Mono, monospace" font-size="8.5" fill="#7BA08B" letter-spacing=".5">presence + liveness</text>
+        <text x="10" y="118" font-family="IBM Plex Mono, monospace" font-size="10" fill="#C8893A" letter-spacing="1">CAPABILITY</text>
+        <text x="10" y="132" font-family="IBM Plex Mono, monospace" font-size="8.5" fill="#7BA08B" letter-spacing=".5">present · live · materialized</text>
         <!-- Platform Type (gate) -->
-        <path d="M0 148 Q75 142 150 146 T300 144 L300 188 L0 188 Z" fill="#211E18" stroke="#3A352C" stroke-width="1"/>
-        <text x="10" y="171" font-family="IBM Plex Mono, monospace" font-size="10" fill="#A89B85" letter-spacing="1">PLATFORM TYPE · gate</text>
-        <!-- Ontology (bedrock, hatched, solid) -->
-        <path d="M0 192 L300 192 L300 252 L0 252 Z" fill="url(#hatch)" stroke="#E8E1D3" stroke-width="1.4"/>
-        <rect x="0" y="192" width="300" height="60" fill="#181613" fill-opacity="0.55"/>
-        <text x="10" y="218" font-family="IBM Plex Mono, monospace" font-size="10" fill="#E8E1D3" letter-spacing="1">ONTOLOGY · bedrock</text>
-        <text x="10" y="232" font-family="IBM Plex Mono, monospace" font-size="8.5" fill="#A89B85" letter-spacing=".5">always first — never skipped</text>
+        <path d="M0 148 Q75 142 150 146 T300 144 L300 184 L0 184 Z" fill="#211E18" stroke="#3A352C" stroke-width="1"/>
+        <text x="10" y="170" font-family="IBM Plex Mono, monospace" font-size="10" fill="#A89B85" letter-spacing="1">PLATFORM TYPE · gate</text>
+        <!-- Grammar (1.5) — a thin seam fused to the bedrock, not a peer band -->
+        <path d="M0 188 L300 188 L300 204 L0 204 Z" fill="url(#hatch)" stroke="#7C725F" stroke-width="1" stroke-dasharray="2 3"/>
+        <rect x="0" y="188" width="300" height="16" fill="#181613" fill-opacity="0.4"/>
+        <text x="22" y="199" font-family="IBM Plex Mono, monospace" font-size="8.5" fill="#A89B85" letter-spacing=".5">1.5 · grammar — how the primitives relate</text>
+        <!-- Ontology (bedrock, hatched, solid) — Grammar rides on its top course -->
+        <path d="M0 204 L300 204 L300 252 L0 252 Z" fill="url(#hatch)" stroke="#E8E1D3" stroke-width="1.4"/>
+        <rect x="0" y="204" width="300" height="48" fill="#181613" fill-opacity="0.55"/>
+        <text x="10" y="226" font-family="IBM Plex Mono, monospace" font-size="10" fill="#E8E1D3" letter-spacing="1">ONTOLOGY · bedrock</text>
+        <text x="10" y="240" font-family="IBM Plex Mono, monospace" font-size="8.5" fill="#A89B85" letter-spacing=".5">always first — never skipped</text>
       </svg>
 
       <div class="layers">
@@ -284,7 +306,7 @@
         </div>
         <div class="layer">
           <span class="num">03</span>
-          <div><span class="lname">Capability</span><div class="ldesc">What the system actually does. Valid only if <b>present and live</b> — stale blocks execution like missing.</div></div>
+          <div><span class="lname">Capability</span><div class="ldesc">What the system actually does. Valid only if <b>present, live, and materialized</b> — a stale or unlinked capability blocks execution like a missing one.</div></div>
         </div>
         <div class="layer">
           <span class="num">02</span>
@@ -292,7 +314,13 @@
         </div>
         <div class="layer bedrock">
           <span class="num">01</span>
-          <div><span class="lname">Ontology</span><div class="ldesc">What must exist in any system: identity, events, value, intent, consent, object. <b>The bedrock. Evaluated first, always.</b></div></div>
+          <div>
+            <span class="lname">Ontology</span><div class="ldesc">What must exist in any system: identity, events, value, intent, consent, object. <b>The bedrock. Evaluated first, always.</b></div>
+            <div class="sublayer">
+              <span class="snum">1.5</span>
+              <div><span class="sname">Grammar</span><span class="sdesc">how those primitives <b>relate</b> — a typed graph riding on the bedrock. Not a sixth layer; the structure on the first.</span></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
