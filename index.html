@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sawyer · CodeDrovers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ground:#181613;        /* warm near-black, dust and iron */
+    --surface:#211E18;       /* lifted panel */
+    --surface-2:#2A261F;
+    --bone:#E8E1D3;          /* weathered canvas, primary text */
+    --dust:#A89B85;          /* drab tan, secondary text */
+    --dust-dim:#7C725F;
+    --brass:#C8893A;         /* oxidized instrument brass — emphasis */
+    --patina:#7BA08B;        /* verdigris — verified / trust notes */
+    --line:#3A352C;          /* low-contrast hairline */
+    --line-soft:#2C2820;
+    --max:1080px;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+  body{
+    background:var(--ground);
+    color:var(--bone);
+    font-family:"IBM Plex Sans",system-ui,sans-serif;
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  /* faint survey-grid atmosphere */
+  body::before{
+    content:"";
+    position:fixed;inset:0;
+    background-image:
+      linear-gradient(var(--line-soft) 1px,transparent 1px),
+      linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);
+    background-size:64px 64px;
+    opacity:.35;
+    pointer-events:none;
+    z-index:0;
+    mask-image:radial-gradient(ellipse 120% 90% at 50% 0%,#000 30%,transparent 80%);
+  }
+
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 28px;position:relative;z-index:1}
+
+  /* ---- type ---- */
+  h1,h2,h3,.display{font-family:"Zilla Slab",Georgia,serif;font-weight:600;line-height:1.08;letter-spacing:-.01em}
+  .eyebrow{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--brass);font-weight:500;
+  }
+  .mono{font-family:"IBM Plex Mono",monospace}
+
+  /* ---- nav ---- */
+  nav{
+    position:relative;z-index:2;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px 0;border-bottom:1px solid var(--line);
+  }
+  .brandmark{display:flex;align-items:baseline;gap:11px}
+  .brandmark .name{
+    font-family:"Zilla Slab",serif;font-weight:700;font-size:19px;letter-spacing:.02em;
+  }
+  .brandmark .name .drov{color:var(--brass)}
+  .tag{
+    font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--dust-dim);
+    border:1px solid var(--line);border-radius:2px;padding:3px 7px;
+  }
+  nav .right{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.1em;color:var(--dust);text-transform:uppercase}
+
+  /* ---- hero ---- */
+  .hero{padding:84px 0 72px;position:relative}
+  .hero .eyebrow{margin-bottom:26px;display:block}
+  .hero h1{font-size:clamp(40px,7vw,76px);margin-bottom:10px}
+  .hero .line2{
+    font-family:"Zilla Slab",serif;font-weight:500;
+    font-size:clamp(20px,3vw,30px);line-height:1.22;color:var(--brass);
+    max-width:24ch;margin-bottom:34px;letter-spacing:-.005em;
+  }
+  .hero .lede{max-width:60ch;color:var(--dust);font-size:18.5px}
+  .hero .lede strong{color:var(--bone);font-weight:500}
+
+  /* compass / scout instrument mark, ambient */
+  .compass{
+    position:absolute;top:48px;right:-10px;width:170px;height:170px;
+    opacity:.5;pointer-events:none;
+  }
+  @media(max-width:760px){.compass{display:none}}
+
+  /* ---- section scaffolding ---- */
+  section{padding:64px 0;border-top:1px solid var(--line-soft);position:relative}
+  .sec-eyebrow{margin-bottom:18px;display:block}
+  .sec-head{font-size:clamp(28px,4.2vw,42px);margin-bottom:22px;max-width:18ch}
+  .sec-body{max-width:62ch;color:var(--dust);font-size:18px}
+  .sec-body strong{color:var(--bone);font-weight:500}
+
+  .pullquote{
+    font-family:"Zilla Slab",serif;font-weight:600;
+    font-size:clamp(24px,3.6vw,34px);line-height:1.2;color:var(--brass);
+    margin:34px 0 4px;max-width:20ch;letter-spacing:-.01em;
+  }
+  .pullquote .sub{display:block;font-family:"IBM Plex Sans",sans-serif;font-weight:400;font-size:15px;color:var(--dust-dim);letter-spacing:0;margin-top:12px}
+
+  /* ---- strata signature ---- */
+  .strata-grid{display:grid;grid-template-columns:minmax(220px,300px) 1fr;gap:46px;align-items:center;margin-top:42px}
+  @media(max-width:760px){.strata-grid{grid-template-columns:1fr;gap:30px}}
+  .strata-svg{width:100%;height:auto;display:block}
+  .layers{display:flex;flex-direction:column;gap:2px}
+  .layer{
+    display:grid;grid-template-columns:34px 1fr;gap:14px;
+    padding:15px 0;border-bottom:1px solid var(--line-soft);
+  }
+  .layer:last-child{border-bottom:none}
+  .layer .num{
+    font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--brass);
+    padding-top:2px;letter-spacing:.04em;
+  }
+  .layer .lname{font-family:"Zilla Slab",serif;font-weight:600;font-size:19px;letter-spacing:.005em}
+  .layer .ldesc{color:var(--dust);font-size:14.5px;line-height:1.5;margin-top:3px}
+  .layer .ldesc b{color:var(--patina);font-weight:500}
+  .layer.bedrock .lname{color:var(--bone)}
+  .layer.overlay .lname{color:var(--dust)}
+  .layer.overlay .num{color:var(--dust-dim)}
+
+  /* ---- boundary cards ---- */
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:40px;background:var(--line);border:1px solid var(--line);border-radius:3px;overflow:hidden}
+  @media(max-width:680px){.cards{grid-template-columns:1fr}}
+  .card{background:var(--surface);padding:30px 28px;position:relative}
+  .card .ct{
+    font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--patina);margin-bottom:13px;display:flex;align-items:center;gap:9px;
+  }
+  .card .ct::before{content:"";width:6px;height:6px;background:var(--patina);border-radius:50%;flex:none}
+  .card h3{font-size:21px;margin-bottom:9px;line-height:1.15}
+  .card p{color:var(--dust);font-size:15.5px;line-height:1.55}
+  .card .wry{color:var(--dust-dim);font-style:italic;font-size:14.5px;display:block;margin-top:9px}
+
+  /* ---- receipt ---- */
+  .receipt-wrap{margin-top:38px;display:grid;grid-template-columns:1fr;gap:0;max-width:620px}
+  .receipt{
+    background:var(--surface);border:1px solid var(--line);border-radius:3px;
+    font-family:"IBM Plex Mono",monospace;font-size:13.5px;line-height:1.75;
+    color:var(--dust);overflow:hidden;
+  }
+  .receipt .rhead{
+    background:var(--surface-2);padding:12px 20px;border-bottom:1px solid var(--line);
+    color:var(--bone);letter-spacing:.04em;display:flex;justify-content:space-between;align-items:center;
+  }
+  .receipt .rhead .tg{color:var(--dust-dim);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+  .receipt .rbody{padding:18px 20px}
+  .receipt .row{display:grid;grid-template-columns:108px 1fr;gap:8px;align-items:start}
+  .receipt .k{color:var(--dust-dim);text-transform:uppercase;font-size:11.5px;letter-spacing:.08em;padding-top:2px}
+  .receipt .v{color:var(--bone)}
+  .receipt .v.warn{color:var(--brass)}
+  .receipt .v.verd{color:var(--brass);font-weight:500}
+  .receipt .v.ok{color:var(--patina)}
+  .receipt .note{color:var(--dust);font-size:12.5px;line-height:1.5;display:block;margin-top:3px}
+  .receipt .rule{height:1px;background:var(--line-soft);margin:13px 0}
+
+  /* ---- closing ---- */
+  .closing{padding:78px 0 30px;border-top:1px solid var(--line-soft)}
+  .closing .big{font-size:clamp(26px,4vw,40px);max-width:22ch;line-height:1.15}
+  .closing .big .brass{color:var(--brass)}
+  .closing .rovers{
+    margin-top:30px;font-family:"IBM Plex Mono",monospace;font-size:12.5px;
+    letter-spacing:.06em;color:var(--dust-dim);max-width:52ch;
+  }
+  .closing .rovers b{color:var(--patina);font-weight:500}
+
+  footer{padding:36px 0 60px;border-top:1px solid var(--line);margin-top:40px;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+  footer .fnote{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--dust-dim);letter-spacing:.04em}
+  footer .fnote b{color:var(--patina);font-weight:500}
+  footer .fmark{font-family:"Zilla Slab",serif;font-weight:700;font-size:15px;letter-spacing:.03em;color:var(--dust)}
+
+  /* ---- reveal ---- */
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+  a{color:inherit}
+  ::selection{background:var(--brass);color:var(--ground)}
+  :focus-visible{outline:2px solid var(--brass);outline-offset:3px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav>
+    <div class="brandmark">
+      <span class="name">Code<span class="drov">Drovers</span></span>
+      <span class="tag">Showcase</span>
+    </div>
+    <span class="right">Field Diagnostic</span>
+  </nav>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <svg class="compass" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+      <circle cx="50" cy="50" r="46" stroke="#3A352C" stroke-width="1"/>
+      <circle cx="50" cy="50" r="34" stroke="#3A352C" stroke-width="1"/>
+      <path d="M50 8 L56 50 L50 60 L44 50 Z" fill="#C8893A"/>
+      <path d="M50 92 L44 50 L50 40 L56 50 Z" fill="#7C725F"/>
+      <circle cx="50" cy="50" r="3" fill="#E8E1D3"/>
+      <g stroke="#3A352C" stroke-width="1">
+        <line x1="50" y1="4" x2="50" y2="14"/><line x1="50" y1="86" x2="50" y2="96"/>
+        <line x1="4" y1="50" x2="14" y2="50"/><line x1="86" y1="50" x2="96" y2="50"/>
+      </g>
+    </svg>
+    <span class="eyebrow">Scope Scout · Diagnostic Agent</span>
+    <h1>Sawyer doesn't replace you.</h1>
+    <p class="line2">He replaces the consulting engagement that would audit the architecture you oversee.</p>
+    <p class="lede">An <strong>episodic, opinionated</strong> diagnostic agent for marketing data architecture. He rides out when you call, reads the terrain, and tells you what's actually true — then hands the decision back to you. He doesn't act. He doesn't linger. <strong>He is not another autopilot.</strong></p>
+  </div>
+</header>
+
+<!-- THE TERRAIN -->
+<section class="reveal">
+  <div class="wrap">
+    <span class="eyebrow sec-eyebrow">The ground you inherit</span>
+    <h2 class="sec-head">Every stack has terrain nobody mapped.</h2>
+    <p class="sec-body">You inherit a data architecture no one fully documented. The spec says one thing; the system does another. A field has been dead since a platform sunset. A capability is wired up and hasn't fired in months. From the outside it all looks integrated — one pipeline, one source of truth. Sawyer's whole job lives in the gap between what the diagram claims and what the system actually does.</p>
+    <p class="pullquote">Present isn't the same as working.
+      <span class="sub">A capability that exists but hasn't run is not a capability you can rely on. Sawyer checks both.</span>
+    </p>
+  </div>
+</section>
+
+<!-- HOW HE READS IT -->
+<section class="reveal">
+  <div class="wrap">
+    <span class="eyebrow sec-eyebrow">How he reads it</span>
+    <h2 class="sec-head">Bedrock up — never the other way around.</h2>
+    <p class="sec-body">Sawyer never starts from a vendor's playbook. He starts from what must be true of <em>any</em> engagement system, and only lets platform-specific models sit on top — as an overlay, never the foundation. Read the cross-section from the bottom.</p>
+
+    <div class="strata-grid">
+      <svg class="strata-svg" viewBox="0 0 300 260" fill="none" aria-label="Five-layer truth model drawn as a terrain cross-section">
+        <defs>
+          <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <line x1="0" y1="0" x2="0" y2="6" stroke="#3A352C" stroke-width="1"/>
+          </pattern>
+        </defs>
+        <!-- Framework (overlay, dashed, removable) -->
+        <path d="M0 30 Q75 18 150 26 T300 24 L300 56 L0 56 Z" fill="none" stroke="#7C725F" stroke-width="1.2" stroke-dasharray="4 4"/>
+        <text x="10" y="48" font-family="IBM Plex Mono, monospace" font-size="10" fill="#7C725F" letter-spacing="1">FRAMEWORK · overlay</text>
+        <!-- Patterns -->
+        <path d="M0 60 Q70 52 150 58 T300 56 L300 96 L0 96 Z" fill="#2A261F" stroke="#3A352C" stroke-width="1"/>
+        <text x="10" y="83" font-family="IBM Plex Mono, monospace" font-size="10" fill="#A89B85" letter-spacing="1">PATTERNS</text>
+        <!-- Capability (the live layer, brass) -->
+        <path d="M0 100 Q80 90 150 98 T300 96 L300 144 L0 144 Z" fill="#2A261F" stroke="#C8893A" stroke-width="1.4"/>
+        <text x="10" y="119" font-family="IBM Plex Mono, monospace" font-size="10" fill="#C8893A" letter-spacing="1">CAPABILITY</text>
+        <text x="10" y="133" font-family="IBM Plex Mono, monospace" font-size="8.5" fill="#7BA08B" letter-spacing=".5">presence + liveness</text>
+        <!-- Platform Type (gate) -->
+        <path d="M0 148 Q75 142 150 146 T300 144 L300 188 L0 188 Z" fill="#211E18" stroke="#3A352C" stroke-width="1"/>
+        <text x="10" y="171" font-family="IBM Plex Mono, monospace" font-size="10" fill="#A89B85" letter-spacing="1">PLATFORM TYPE · gate</text>
+        <!-- Ontology (bedrock, hatched, solid) -->
+        <path d="M0 192 L300 192 L300 252 L0 252 Z" fill="url(#hatch)" stroke="#E8E1D3" stroke-width="1.4"/>
+        <rect x="0" y="192" width="300" height="60" fill="#181613" fill-opacity="0.55"/>
+        <text x="10" y="218" font-family="IBM Plex Mono, monospace" font-size="10" fill="#E8E1D3" letter-spacing="1">ONTOLOGY · bedrock</text>
+        <text x="10" y="232" font-family="IBM Plex Mono, monospace" font-size="8.5" fill="#A89B85" letter-spacing=".5">always first — never skipped</text>
+      </svg>
+
+      <div class="layers">
+        <div class="layer overlay">
+          <span class="num">05</span>
+          <div><span class="lname">Framework</span><div class="ldesc">A vendor's implementation model. Applied only on top, only when the platform is confirmed. <b>An overlay, never the truth underneath.</b></div></div>
+        </div>
+        <div class="layer">
+          <span class="num">04</span>
+          <div><span class="lname">Patterns</span><div class="ldesc">Which behaviors are actually possible. Constrained by capability — <b>never assumed into existence.</b></div></div>
+        </div>
+        <div class="layer">
+          <span class="num">03</span>
+          <div><span class="lname">Capability</span><div class="ldesc">What the system actually does. Valid only if <b>present and live</b> — stale blocks execution like missing.</div></div>
+        </div>
+        <div class="layer">
+          <span class="num">02</span>
+          <div><span class="lname">Platform Type</span><div class="ldesc">The role the system plays, by what it does — not its brand name. <b>A gate, not a label.</b></div></div>
+        </div>
+        <div class="layer bedrock">
+          <span class="num">01</span>
+          <div><span class="lname">Ontology</span><div class="ldesc">What must exist in any system: identity, events, value, intent, consent, object. <b>The bedrock. Evaluated first, always.</b></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUSTWORTHY -->
+<section class="reveal">
+  <div class="wrap">
+    <span class="eyebrow sec-eyebrow">Why he's trusted</span>
+    <h2 class="sec-head">The trust comes from the limits.</h2>
+    <p class="sec-body">Sawyer is useful because of what he refuses to do. Every boundary below is deliberate — and every one is the reason a wary operator can hand him the keys to look without worrying he'll turn them.</p>
+
+    <div class="cards">
+      <div class="card">
+        <span class="ct">Diagnose, not execute</span>
+        <h3>He reads. He doesn't touch.</h3>
+        <p>Sawyer inspects and reports. He never writes to your system, never changes a setting, never acts on your behalf. The hands on the controls stay yours.</p>
+      </div>
+      <div class="card">
+        <span class="ct">Scout, not sentry</span>
+        <h3>He rides out, then he's gone.</h3>
+        <p>He runs when you call him and stops when he's done. No always-on watching, no background process, no heartbeat. Episodic by design.</p>
+        <span class="wry">He won't monitor your stack at 3 a.m. That was never the job.</span>
+      </div>
+      <div class="card">
+        <span class="ct">Maps terrain, not destinations</span>
+        <h3>He lays out the options. You choose.</h3>
+        <p>Sawyer shows what's possible across the ground and where it's blocked. He won't pick your route. The recommendation — and the accountability — stays human.</p>
+      </div>
+      <div class="card">
+        <span class="ct">Receipts, and honest edges</span>
+        <h3>He tells you what he can't see.</h3>
+        <p>Every finding carries its evidence and can be re-derived from it. When something's out of view, he says so, plainly, instead of guessing past it.</p>
+        <span class="wry">A low bar a surprising amount of software fails to clear.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- A FINDING -->
+<section class="reveal">
+  <div class="wrap">
+    <span class="eyebrow sec-eyebrow">A finding, the way he files it</span>
+    <h2 class="sec-head">What he hands back.</h2>
+    <p class="sec-body">A Sawyer finding isn't a verdict you have to trust — it's a verdict you can re-derive. Here's the shape of one: the call, the evidence behind it, and the honest line marking what he could and couldn't determine. Run against a reference workspace.</p>
+
+    <div class="receipt-wrap">
+      <div class="receipt" role="img" aria-label="Example diagnostic finding showing presence, liveness, verdict, receipt, and a hedge">
+        <div class="rhead"><span>FINDING · events.capability</span><span class="tg">re-derivable</span></div>
+        <div class="rbody">
+          <div class="row"><span class="k">presence</span><span class="v ok">present</span></div>
+          <div class="row"><span class="k">liveness</span><span class="v warn">stale — last event 174 days ago</span></div>
+          <div class="row"><span class="k">verdict</span><span class="v verd">not functional<span class="note">Present is not working. A stale capability blocks execution exactly like a missing one.</span></span></div>
+          <div class="rule"></div>
+          <div class="row"><span class="k">receipt</span><span class="v">probe@v2 · capture #a83f9c · re-run to reproduce</span></div>
+          <div class="row"><span class="k">hedge</span><span class="v" style="color:var(--dust)">Activation path is not exposed to read-only access. Confirm directly before relying on this.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section class="closing reveal">
+  <div class="wrap">
+    <p class="display big">He rides out, reads the ground, and tells you <span class="brass">straight</span>. Then he's gone until you call him again.</p>
+    <p class="rovers"><b>coded rovers</b> — autonomous scouts that range, read, and report. They don't run the territory. They survey it, and they come back with the map.</p>
+  </div>
+</section>
+
+<div class="wrap">
+  <footer>
+    <span class="fnote">Demonstrated on a reference workspace. <b>No client data lives here.</b></span>
+    <span class="fmark">CodeDrovers</span>
+  </footer>
+</div>
+
+<script>
+  (function(){
+    var els=document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window)||window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      els.forEach(function(e){e.classList.add('in')});return;
+    }
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});
+    },{threshold:.14});
+    els.forEach(function(e){io.observe(e)});
+  })();
+</script>
+
+</body>
+</html>
