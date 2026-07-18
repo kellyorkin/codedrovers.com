@@ -200,7 +200,26 @@
     display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
   footer .fnote{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--dust-dim);letter-spacing:.04em}
   footer .fnote b{color:var(--patina);font-weight:500}
-  footer .fmark{font-family:"Zilla Slab",serif;font-weight:700;font-size:15px;letter-spacing:.03em;color:var(--dust)}
+  footer .fmark{
+    font-family:"Zilla Slab",serif;font-weight:700;font-size:15px;letter-spacing:.03em;color:var(--dust);
+    display:flex;align-items:center;gap:12px;margin-left:auto;
+  }
+  footer .fmark img{
+    width:40px;height:auto;display:block;flex:none;
+    opacity:.75;transition:opacity .3s ease;
+  }
+  footer .fmark:hover img{opacity:1}
+  @media(max-width:680px){footer .fmark{margin-left:0}}
+
+  /* ambient herd mark, bottom-right of the closing panel — optional counterweight
+     to the hero compass. Uncomment the <img class="herd"> in the closing section. */
+  .closing{overflow:hidden}
+  .herd{
+    position:absolute;right:-40px;bottom:-30px;width:300px;height:auto;
+    opacity:.06;pointer-events:none;user-select:none;z-index:0;
+  }
+  .closing .wrap{position:relative;z-index:1}
+  @media(max-width:760px){.herd{display:none}}
 
   /* ---- reveal ---- */
   .reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
@@ -386,6 +405,9 @@
 
 <!-- CLOSING -->
 <section class="closing reveal">
+  <!-- optional: ambient counterweight to the hero compass
+  <img class="herd" src="longhorn-mark.png" alt="" aria-hidden="true">
+  -->
   <div class="wrap">
     <p class="display big">He rides out, reads the ground, and tells you <span class="brass">straight</span>. Then he's gone until you call him again.</p>
     <p class="rovers"><b>codedrovers</b> — autonomous scouts that range, read, and report. They don't run the territory. They survey it, and they come back with the map.</p>
@@ -398,7 +420,10 @@
   </p>
   <footer>
     <span class="fnote">Demonstrated on a reference workspace. <b>No client data lives here.</b></span>
-    <span class="fmark">CodeDrovers</span>
+    <span class="fmark">
+      <img src="longhorn-mark.png" alt="" aria-hidden="true">
+      CodeDrovers
+    </span>
   </footer>
 </div>
 
