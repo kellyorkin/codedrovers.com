@@ -165,7 +165,8 @@
   .card .wry{color:var(--dust-dim);font-style:italic;font-size:14.5px;display:block;margin-top:9px}
 
   /* ---- receipt ---- */
-  .receipt-wrap{margin-top:38px;display:grid;grid-template-columns:1fr;gap:0;max-width:620px}
+  .receipt-wrap{margin-top:38px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media(max-width:760px){.receipt-wrap{grid-template-columns:1fr;max-width:620px}}
   .receipt{
     background:var(--surface);border:1px solid var(--line);border-radius:3px;
     font-family:"IBM Plex Mono",monospace;font-size:13.5px;line-height:1.75;
@@ -211,14 +212,15 @@
   footer .fmark:hover img{opacity:1}
   @media(max-width:680px){footer .fmark{margin-left:0}}
 
-  /* ambient herd mark, bottom-right of the closing panel — optional counterweight
-     to the hero compass. Uncomment the <img class="herd"> in the closing section. */
+  /* ambient herd mark, bottom-right of the closing panel — counterweight
+     to the hero compass. Live in the closing section markup. */
   .closing{overflow:hidden}
   .herd{
-    position:absolute;right:-40px;bottom:-30px;width:300px;height:auto;
-    opacity:.06;pointer-events:none;user-select:none;z-index:0;
+    position:absolute;right:0;bottom:-14px;width:280px;height:auto;
+    opacity:.09;pointer-events:none;user-select:none;z-index:0;
   }
-  .closing .wrap{position:relative;z-index:1}
+  .closing .wrap{position:relative}
+  .closing .wrap > p{position:relative;z-index:1}
   @media(max-width:760px){.herd{display:none}}
 
   /* ---- reveal ---- */
@@ -236,6 +238,7 @@
 <div class="wrap">
   <nav>
     <div class="brandmark">
+      <img src="longhorn-mark.png" alt="" aria-hidden="true" style="width:30px;height:auto;display:block;align-self:center;opacity:.9">
       <span class="name">Code<span class="drov">Drovers</span></span>
       <span class="tag">Showcase</span>
     </div>
@@ -385,7 +388,7 @@
   <div class="wrap">
     <span class="eyebrow sec-eyebrow">A finding, the way he files it</span>
     <h2 class="sec-head">What he hands back.</h2>
-    <p class="sec-body">A Surveyor finding isn't a verdict you have to trust — it's a verdict you can re-derive. Here's the shape of one: the call, the evidence behind it, and the honest line marking what he could and couldn't determine. Run against a reference workspace.</p>
+    <p class="sec-body">A Surveyor finding isn't a verdict you have to trust — it's a verdict you can re-derive. Two findings from the same ride: one flag, one clean pass — because a scout who only ever alarms is a scout you stop believing. Run against a reference workspace.</p>
 
     <div class="receipt-wrap">
       <div class="receipt" role="img" aria-label="Example diagnostic finding showing presence, liveness, verdict, receipt, and a hedge">
@@ -399,6 +402,17 @@
           <div class="row"><span class="k">hedge</span><span class="v" style="color:var(--dust)">Activation path is not exposed to read-only access. Confirm directly before relying on this.</span></div>
         </div>
       </div>
+      <div class="receipt" role="img" aria-label="Example diagnostic finding with a clean functional verdict and no hedge required">
+        <div class="rhead"><span>FINDING · consent.capability</span><span class="tg">re-derivable</span></div>
+        <div class="rbody">
+          <div class="row"><span class="k">presence</span><span class="v ok">present</span></div>
+          <div class="row"><span class="k">liveness</span><span class="v ok">live — evaluated on last send, 2 days ago</span></div>
+          <div class="row"><span class="k">verdict</span><span class="v ok" style="font-weight:500">functional<span class="note">No finding is also a finding. He files the clean pass with the same receipts as the flag.</span></span></div>
+          <div class="rule"></div>
+          <div class="row"><span class="k">receipt</span><span class="v">probe@v2 · capture #a83fa1 · re-run to reproduce</span></div>
+          <div class="row"><span class="k">hedge</span><span class="v" style="color:var(--dust-dim)">none required.</span></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -406,9 +420,8 @@
 <!-- CLOSING -->
 <section class="closing reveal">
 
-  <img class="herd" src="longhorn-mark.png" alt="" aria-hidden="true">
-
   <div class="wrap">
+    <img class="herd" src="longhorn-mark.png" alt="" aria-hidden="true">
     <p class="display big">He rides out, reads the ground, and tells you <span class="brass">straight</span>. Then he's gone until you call him again.</p>
     <p class="rovers"><b>codedrovers</b> — autonomous scouts that range, read, and report. They don't run the territory. They survey it, and they come back with the map.</p>
   </div>
@@ -419,7 +432,8 @@
     A Surveyor Agent is a CodeDrovers scout, not a product — built and run in-house, shown here on a reference workspace.
   </p>
   <footer>
-    <span class="fnote">Demonstrated on a reference workspace. <b>No client data lives here.</b></span>
+    <span class="fnote">Demonstrated on a reference workspace. <b>No client data lives here.</b><br>
+    Surveyed by <a href="https://korkworks.com" style="color:var(--dust);text-decoration:none;border-bottom:1px solid var(--line)">Kelly Orkin Brady</a> · CodeDrovers, a practice of <a href="https://indifferencer.com" style="color:var(--dust);text-decoration:none;border-bottom:1px solid var(--line)">Indifferencer LLC</a> · <a href="mailto:kellybrady@indifferencer.com?subject=Request%20a%20survey" style="color:var(--brass);text-decoration:none;border-bottom:1px solid var(--brass)">request a survey</a></span>
     <span class="fmark">
       <img src="longhorn-mark.png" alt="" aria-hidden="true">
       CodeDrovers
