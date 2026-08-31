@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;min-height:100%}
+  html{scroll-behavior:smooth}
+  a{color:inherit}
+  a:hover{opacity:.85}
+</style>
+</helmet>
+<div ref="{{ rootRef }}" style="--bg:#efebe0;--card:#f7f4ea;--cardHover:#efe9d8;--ink:#21262f;--head:#21262f;--sub:#4c5261;--muted:#8a8371;--line:#d8d2c2;--border:#21262f;--accent:#9a6524;--accentText:#9a6524;--pillText:#f7f4ea;--tickerBg:#21262f;--tickerText:#b6ad97;--footerBg:#21262f;--footerText:#9aa0ad;--footerHead:#c9c2b0;--footerBright:#e6e0d0;--footerLine:#3a4150;--footerDim:#5c6474;--osw:Oswald,Arial,sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace;background:var(--bg);color:var(--ink);min-height:100vh;transition:background .5s ease;font-family:Arial,Helvetica,sans-serif;container-type:inline-size">
+
+  <div style="background:var(--tickerBg);color:var(--tickerText);font-size:10.5px;letter-spacing:.1em;padding:8px clamp(14px,2.5cqw,24px);display:flex;gap:16px;align-items:center;overflow:hidden;white-space:nowrap;font-family:var(--osw);transition:background .5s ease">
+    <span style="flex:none;color:var(--accent);letter-spacing:.2em;border:1px solid var(--footerLine);padding:2px 8px">FIELD UNIT &middot; THE SCOUT</span>
+    <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis">SCOPING &amp; DISCOVERY &nbsp;&#9670;&nbsp; READ-ONLY INTROSPECTION &nbsp;&#9670;&nbsp; FOUR GAP TYPES &nbsp;&#9670;&nbsp; DISCOVERY AGENDAS &nbsp;&#9670;&nbsp; ARCHITECT REVIEW REQUIRED &nbsp;&#9670;&nbsp; 25-ITERATION SAFETY CAP</span>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:18px clamp(18px,4cqw,40px);border-bottom:1.5px solid var(--border);gap:12px 16px">
+    <a href="/" style="display:flex;align-items:center;gap:10px;font-family:var(--osw);font-weight:600;font-size:17px;letter-spacing:.24em;color:var(--head);text-decoration:none">
+      <span style="flex:none;background:var(--tickerBg);border:1.5px solid var(--border);padding:4px 6px;display:flex;align-items:center;transition:background .5s ease"><img src="assets/longhorn-mark.png" alt="CodeDrovers longhorn" style="height:18px;width:auto;display:block"></span>
+      <span>CODEDROVERS</span>
+    </a>
+    <div style="display:flex;flex-wrap:wrap;gap:12px 22px;font-size:11px;letter-spacing:.14em;align-items:center;font-family:var(--osw)">
+      <a href="#premise" style="color:var(--sub);text-decoration:none">PREMISE</a>
+      <a href="#gaps" style="color:var(--sub);text-decoration:none">GAP TYPES</a>
+      <a href="#conduct" style="color:var(--sub);text-decoration:none">CONDUCT</a>
+      <a href="mailto:kellybrady@indifferencer.com?subject=The%20Scout%20%C2%B7%20Scoping%20%26%20Discovery" style="color:var(--sub);text-decoration:none">ENGAGE</a>
+      <button onClick="{{ toggle }}" title="Lighting is allocated automatically at 6:00 PM local time. Manual overrides are noted in your file." style="cursor:pointer;color:var(--accentText);border:1px solid var(--accentText);padding:5px 12px;font-weight:600;userSelect:none;background:none;font-size:11px;letter-spacing:.14em;font-family:var(--osw);white-space:nowrap">{{ toggleLabel }}</button>
+    </div>
+  </div>
+
+  <div style="padding:clamp(34px,5cqw,54px) clamp(18px,4cqw,40px) 38px;border-bottom:1px solid var(--line)">
+    <div style="font-size:clamp(9.5px,1.1cqw,11px);letter-spacing:.3em;color:var(--accentText);font-family:var(--osw)">&mdash; SCOPING &amp; DISCOVERY &middot; A CODEDROVERS FIELD UNIT &mdash;</div>
+    <h1 style="font-family:var(--osw);font-weight:600;font-size:clamp(30px,5.4cqw,52px);line-height:1.05;letter-spacing:.02em;margin:16px 0 0;max-width:20ch;text-transform:uppercase;color:var(--head)">An Agent That Reasons Like a Senior Implementation Architect.</h1>
+    <p style="font-size:14.5px;line-height:1.7;color:var(--sub);max-width:58ch;margin:18px 0 0">The Scout close-reads a client request, introspects the live workspace read-only, and returns a structured discovery agenda &mdash; the questions worth asking before a single use case is scoped. He proposes. The architect decides.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:20px 40px;margin-top:28px;font-family:var(--osw)">
+      <span style="font-size:11px;letter-spacing:.12em;color:var(--muted)"><strong style="display:block;font-size:24px;letter-spacing:0;color:var(--head);font-weight:600">0</strong>WRITE PATHS IN THE RUNTIME</span>
+      <span title="Event-family, attribute, integration, mapping ambiguity." style="font-size:11px;letter-spacing:.12em;color:var(--muted)"><strong style="display:block;font-size:24px;letter-spacing:0;color:var(--head);font-weight:600">4</strong>TYPED GAP CLASSES</span>
+      <span style="font-size:11px;letter-spacing:.12em;color:var(--muted)"><strong style="display:block;font-size:24px;letter-spacing:0;color:var(--head);font-weight:600">25</strong>ITERATION SAFETY CAP</span>
+      <span style="font-size:11px;letter-spacing:.12em;color:var(--muted)"><strong style="display:block;font-size:24px;letter-spacing:0;color:var(--head);font-weight:600">1</strong>ARCHITECT WHO OWNS THE OUTPUT</span>
+    </div>
+  </div>
+
+  <div id="premise" style="padding:34px clamp(18px,4cqw,40px) 10px;scroll-margin-top:12px">
+    <div style="font-size:clamp(9.5px,1.1cqw,11px);letter-spacing:.26em;color:var(--accentText);margin-bottom:16px;font-family:var(--osw)">&mdash; THE PREMISE &middot; THE AGENDA IS THE DIFF &mdash;</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;align-items:stretch">
+      <div style="background:var(--card);border:1.5px solid var(--border);padding:20px;transition:background .5s ease">
+        <div style="font-family:var(--osw);font-size:10px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase">Local knowledge</div>
+        <div style="font-family:var(--osw);font-weight:600;font-size:16px;text-transform:uppercase;letter-spacing:.03em;margin-top:8px;color:var(--head)">What should be true</div>
+        <div style="font-size:12.5px;line-height:1.6;color:var(--sub);margin-top:8px">A curated use-case library: the events, attributes, and integrations each use case requires when built correctly.</div>
+      </div>
+      <div style="background:var(--card);border:1.5px solid var(--border);padding:20px;transition:background .5s ease">
+        <div style="font-family:var(--osw);font-size:10px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase">Live workspace, via MCP</div>
+        <div style="font-family:var(--osw);font-weight:600;font-size:16px;text-transform:uppercase;letter-spacing:.03em;margin-top:8px;color:var(--head)">What is true</div>
+        <div style="font-size:12.5px;line-height:1.6;color:var(--sub);margin-top:8px">Read-only introspection of the marketing platform: event schemas, taxonomy mappings, customer property schemas, workspace scale.</div>
+      </div>
+      <div style="background:var(--tickerBg);border:1.5px solid var(--border);padding:20px;transition:background .5s ease">
+        <div style="font-family:var(--osw);font-size:10px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase">The deliverable</div>
+        <div style="font-family:var(--osw);font-weight:600;font-size:16px;text-transform:uppercase;letter-spacing:.03em;margin-top:8px;color:var(--footerBright)">The discovery agenda</div>
+        <div style="font-size:12.5px;line-height:1.6;color:var(--footerText);margin-top:8px">The diff between the two, classified into typed gaps &mdash; grounded in workspace evidence, not client assertion. Ready for the next client conversation.</div>
+      </div>
+    </div>
+    <p style="font-size:13px;line-height:1.7;color:var(--sub);max-width:64ch;margin:18px 0 0">The cross-reference is the architectural move that makes the Scout an agent rather than a lookup tool: he queries what should be true and probes what is true in the same reasoning step. A single request triggers an iterative loop &mdash; batched tool calls, each round informed by the last &mdash; that ends when the agenda is complete or at the 25-iteration cap, whichever comes first. One vague-input session ran more than 20 tool calls before the Scout was satisfied.</p>
+  </div>
+
+  <div id="gaps" style="padding:34px clamp(18px,4cqw,40px) 10px;scroll-margin-top:12px">
+    <div style="font-size:clamp(9.5px,1.1cqw,11px);letter-spacing:.26em;color:var(--accentText);margin-bottom:16px;font-family:var(--osw)">&mdash; FOUR TYPED GAPS &middot; AS CLASSIFIED IN THE FIELD &mdash;</div>
+    <div style="background:var(--card);border:1.5px solid var(--border);transition:background .5s ease">
+      <div style="display:flex;flex-wrap:wrap;gap:4px 18px;padding:15px 20px;border-bottom:1px solid var(--line);align-items:baseline">
+        <span style="font-family:var(--osw);font-size:12px;letter-spacing:.1em;color:var(--head);font-weight:600;text-transform:uppercase">Event-family gap</span>
+        <span style="font-family:var(--mono);font-size:10.5px;color:var(--accentText);margin-left:auto">demo: double_opt_in not present</span>
+        <span style="font-size:12.5px;line-height:1.55;width:100%;color:var(--sub)">The required event type does not exist in the workspace at all.</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px 18px;padding:15px 20px;border-bottom:1px solid var(--line);align-items:baseline">
+        <span style="font-family:var(--osw);font-size:12px;letter-spacing:.1em;color:var(--head);font-weight:600;text-transform:uppercase">Attribute gap</span>
+        <span style="font-family:var(--mono);font-size:10.5px;color:var(--accentText);margin-left:auto">demo: consent_list absent on consent event</span>
+        <span style="font-size:12.5px;line-height:1.55;width:100%;color:var(--sub)">The event exists but lacks a field the use case depends on.</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px 18px;padding:15px 20px;border-bottom:1px solid var(--line);align-items:baseline">
+        <span style="font-family:var(--osw);font-size:12px;letter-spacing:.1em;color:var(--head);font-weight:600;text-transform:uppercase">Integration gap</span>
+        <span style="font-family:var(--mono);font-size:10.5px;color:var(--accentText);margin-left:auto">demo: SMS provider unconfirmed in schema</span>
+        <span style="font-size:12.5px;line-height:1.55;width:100%;color:var(--sub)">Data flows exist, but in the wrong direction or at the wrong latency.</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px 18px;padding:15px 20px;align-items:baseline">
+        <span style="font-family:var(--osw);font-size:12px;letter-spacing:.1em;color:var(--head);font-weight:600;text-transform:uppercase">Mapping ambiguity</span>
+        <span style="font-family:var(--mono);font-size:10.5px;color:var(--accentText);margin-left:auto">demo: 12 taxonomy slots null, 27 event types flowing</span>
+        <span style="font-size:12.5px;line-height:1.55;width:100%;color:var(--sub)">Events flow under custom names never wired to the standard taxonomy.</span>
+      </div>
+    </div>
+    <div style="background:var(--tickerBg);border:1.5px solid var(--border);margin-top:16px;padding:20px 22px;transition:background .5s ease">
+      <div style="font-family:var(--osw);font-size:10px;letter-spacing:.2em;color:var(--accent);text-transform:uppercase">Field finding &middot; the load-bearing condition</div>
+      <div style="font-family:var(--mono);font-size:13px;line-height:1.7;color:var(--footerBright);margin-top:10px">Manual inventory recorded 21 event types and flagged view_item as absent. The live probe returned 27, with view_item carrying 89,717 events &mdash; and every one of the 12 standard taxonomy slots mapped to null. Rich behavioral data flowing; none of it wired to the taxonomy.</div>
+      <div style="font-size:11.5px;color:var(--footerText);margin-top:10px;font-style:italic">A finding manual inspection missed and live probing surfaced. It reframed the discovery agenda before a single use case was scoped.</div>
+    </div>
+  </div>
+
+  <div id="conduct" style="padding:34px clamp(18px,4cqw,40px) 44px;scroll-margin-top:12px">
+    <div style="font-size:clamp(9.5px,1.1cqw,11px);letter-spacing:.26em;color:var(--accentText);margin-bottom:6px;font-family:var(--osw)">&mdash; CODE OF CONDUCT &middot; RESPONSIBLE DESIGN &mdash;</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:18px;font-style:italic">Every claim below is one the Scout can back with receipts. The ones he can't make are listed too.</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px">
+      <div style="background:var(--card);border:1.5px solid var(--border);padding:18px;transition:background .5s ease">
+        <div style="font-family:var(--osw);font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--head)">Read-Only by Design</div>
+        <div style="font-size:12px;line-height:1.6;color:var(--sub);margin-top:8px">No write path exists in the runtime. Every tool is a get, list, search, or find. The Scout does not write data, modify configuration, create segments, or send messages. This is the property the rest of the design depends on.</div>
+      </div>
+      <div style="background:var(--card);border:1.5px solid var(--border);padding:18px;transition:background .5s ease">
+        <div style="font-family:var(--osw);font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--head)">Recommendation, Not Execution</div>
+        <div style="font-size:12px;line-height:1.6;color:var(--sub);margin-top:8px">The output is a discovery agenda for architect review &mdash; never a scope, a quote, or anything client-facing without a human signature. The reasoning trace is fully visible, so every classification can be interrogated. The human owns the output.</div>
+      </div>
+      <div style="background:var(--card);border:1.5px solid var(--border);padding:18px;transition:background .5s ease">
+        <div style="font-family:var(--osw);font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--head)">Nothing Persists</div>
+        <div style="font-size:12px;line-height:1.6;color:var(--sub);margin-top:8px">Session state lives in memory and is discarded on reset. No workspace data, customer records, or response payloads are persisted beyond the active session. Trace export exists &mdash; but it is architect-initiated and visible, never background.</div>
+      </div>
+      <div style="background:var(--card);border:1.5px solid var(--border);padding:18px;transition:background .5s ease">
+        <div style="font-family:var(--osw);font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--head)">Everything Is Logged</div>
+        <div style="font-size:12px;line-height:1.6;color:var(--sub);margin-top:8px">Every tool call emits a structured access line: timestamp, tool, source, parameters, size, status, latency. Payloads never reach the audit tier. The access log is always on &mdash; it is the trail the whole posture depends on.</div>
+      </div>
+      <div style="background:var(--card);border:1.5px solid var(--border);padding:18px;transition:background .5s ease">
+        <div style="font-family:var(--osw);font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--head)">Bounded Reasoning</div>
+        <div style="font-size:12px;line-height:1.6;color:var(--sub);margin-top:8px">The loop is capped at 25 tool iterations per session; at the cap, the Scout surfaces what he has rather than riding on. Rate limits are respected by pacing calls under the platform's cap by design, not by aggressive retry.</div>
+      </div>
+      <div style="background:var(--card);border:1.5px solid var(--border);padding:18px;transition:background .5s ease">
+        <div style="font-family:var(--osw);font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--head)">No Credentials on Paper</div>
+        <div style="font-size:12px;line-height:1.6;color:var(--sub);margin-top:8px">Keys live in the environment, never in source or logs; error messages name the variable, not the value. Token-bearing responses are explicitly excluded from logging.</div>
+      </div>
+    </div>
+    <div style="background:var(--card);border:1.5px solid var(--border);margin-top:16px;padding:18px 20px;transition:background .5s ease">
+      <div style="font-family:var(--osw);font-size:10px;letter-spacing:.2em;color:var(--accentText);text-transform:uppercase">What is not claimed</div>
+      <div style="font-size:12.5px;line-height:1.7;color:var(--sub);margin-top:8px;max-width:74ch">"Propose, don't decide" is a workflow property, enforced in the system prompt and the review step &mdash; not a database-level write block beyond the read-only design above. And no claim is made that a malicious operator with code access couldn't rewire the agent; the posture is honest about how the system is deployed and reviewed, not armored against adversaries no agent with credentials could survive. Identified for pre-production: managed audit-log retention, broader anomaly detection, a general redaction layer.</div>
+    </div>
+  </div>
+
+  <div style="background:var(--footerBg);color:var(--footerText);padding:36px clamp(18px,4cqw,40px) 28px;transition:background .5s ease">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:28px clamp(20px,3cqw,44px)">
+      <div style="flex:1 1 320px;min-width:0">
+        <div style="color:var(--footerBright);font-size:14px;font-weight:600;letter-spacing:.2em;font-family:var(--osw)">THE SCOUT</div>
+        <div style="font-size:9.5px;letter-spacing:.22em;color:var(--accent);margin-top:6px;font-family:var(--osw)">&mdash; A CODEDROVERS FIELD UNIT &mdash;</div>
+        <div style="font-size:11.5px;line-height:1.7;margin-top:12px;font-style:italic">Practice note:<br>"The map before the ride."<span style="opacity:.7"><br>&mdash; The Scout, agenda attached</span></div>
+      </div>
+      <div style="flex:0 0 auto">
+        <div style="color:var(--footerHead);font-size:10px;letter-spacing:.2em;margin-bottom:10px;font-family:var(--osw)">THE PRACTICE</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:12px">
+          <a href="/" style="color:var(--footerText);text-decoration:none">CodeDrovers</a>
+          <a href="/surveyor.html" style="color:var(--footerText);text-decoration:none">The Surveyor</a>
+          <a href="mailto:kellybrady@indifferencer.com?subject=The%20Scout%20%C2%B7%20Scoping%20%26%20Discovery" style="color:var(--footerText);text-decoration:none">Engage the Scout</a>
+          <a href="https://indifferencer.com" style="color:var(--footerText);text-decoration:none">Indifferencer LLC</a>
+        </div>
+      </div>
+      <img src="assets/longhorn-mark.png" alt="CodeDrovers longhorn" style="flex:0 0 auto;display:block;width:88px;height:auto">
+      <img src="assets/indifferencer-dark.svg" alt="Indifferencer — Nobile Nihil" style="flex:0 0 auto;display:block;width:100px">
+    </div>
+    <div style="border-top:1px solid var(--footerLine);margin-top:26px;padding-top:14px;font-size:10.5px;line-height:1.8;color:var(--footerDim)">&copy; Indifferencer LLC &middot; The Scout is a scoping &amp; discovery unit of the CodeDrovers practice. &middot; Demonstrated on reference workspaces; no client data lives here. &middot; Architect review required for all client deliverables.</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;lighting&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;clock&quot;,&quot;day&quot;,&quot;after-hours&quot;],&quot;default&quot;:&quot;clock&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Scene&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#9a6524&quot;,&quot;#7c8a4e&quot;],&quot;default&quot;:&quot;#9a6524&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Scene&quot;}}">
+class Component extends DCLogic {
+  state = { after: null };
+  isAfter() {
+    if (this.state.after !== null) return this.state.after;
+    const mode = this.props.lighting ?? 'clock';
+    if (mode === 'day') return false;
+    if (mode === 'after-hours') return true;
+    const h = new Date().getHours();
+    return h >= 18 || h < 6;
+  }
+  vars() {
+    const day = { bg:'#efebe0', card:'#f7f4ea', cardHover:'#efe9d8', ink:'#21262f', head:'#21262f', sub:'#4c5261', muted:'#8a8371', line:'#d8d2c2', border:'#21262f', pillText:'#f7f4ea', tickerBg:'#21262f', tickerText:'#b6ad97', footerBg:'#21262f', footerText:'#9aa0ad', footerHead:'#c9c2b0', footerBright:'#e6e0d0', footerLine:'#3a4150', footerDim:'#5c6474' };
+    const after = { bg:'#21262f', card:'#282e39', cardHover:'#2e3542', ink:'#efebe0', head:'#efebe0', sub:'#9aa0ad', muted:'#7c8590', line:'#3a4150', border:'#3a4150', pillText:'#1a1f27', tickerBg:'#1a1f27', tickerText:'#b6ad97', footerBg:'#1a1f27', footerText:'#9aa0ad', footerHead:'#c9c2b0', footerBright:'#e6e0d0', footerLine:'#3a4150', footerDim:'#5c6474' };
+    const dayAccent = this.props.accent ?? '#9a6524';
+    const nightMap = { '#9a6524':'#c8893a', '#7c8a4e':'#8b9457' };
+    const isAfter = this.isAfter();
+    const a = isAfter ? (nightMap[dayAccent] || dayAccent) : dayAccent;
+    return Object.assign({}, isAfter ? after : day, { accent: a, accentText: a });
+  }
+  apply() {
+    if (!this.rootEl) return;
+    const v = this.vars();
+    for (const k in v) this.rootEl.style.setProperty('--' + k, v[k]);
+  }
+  componentDidMount() { this.apply(); }
+  componentDidUpdate() { this.apply(); }
+  renderVals() {
+    return {
+      rootRef: (el) => { this.rootEl = el; if (el) this.apply(); },
+      toggle: () => this.setState({ after: !this.isAfter() }),
+      toggleLabel: this.isAfter() ? 'RESUME DAYTIME OPERATIONS \u2192' : 'AFTER-HOURS OPERATIONS BEGIN AT SIX \u2192',
+    };
+  }
+}
+</script>
+</body>
+</html>

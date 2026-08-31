@@ -1,458 +1,233 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Surveyor · CodeDrovers</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --ground:#181613;        /* warm near-black, dust and iron */
-    --surface:#211E18;       /* lifted panel */
-    --surface-2:#2A261F;
-    --bone:#E8E1D3;          /* weathered canvas, primary text */
-    --dust:#A89B85;          /* drab tan, secondary text */
-    --dust-dim:#7C725F;
-    --brass:#C8893A;         /* oxidized instrument brass — emphasis */
-    --patina:#7BA08B;        /* verdigris — verified / trust notes */
-    --line:#3A352C;          /* low-contrast hairline */
-    --line-soft:#2C2820;
-    --max:1080px;
-  }
-
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-
-  body{
-    background:var(--ground);
-    color:var(--bone);
-    font-family:"IBM Plex Sans",system-ui,sans-serif;
-    font-size:17px;
-    line-height:1.65;
-    -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
-  }
-
-  /* faint survey-grid atmosphere */
-  body::before{
-    content:"";
-    position:fixed;inset:0;
-    background-image:
-      linear-gradient(var(--line-soft) 1px,transparent 1px),
-      linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);
-    background-size:64px 64px;
-    opacity:.35;
-    pointer-events:none;
-    z-index:0;
-    mask-image:radial-gradient(ellipse 120% 90% at 50% 0%,#000 30%,transparent 80%);
-  }
-
-  .wrap{max-width:var(--max);margin:0 auto;padding:0 28px;position:relative;z-index:1}
-
-  /* ---- type ---- */
-  h1,h2,h3,.display{font-family:"Zilla Slab",Georgia,serif;font-weight:600;line-height:1.08;letter-spacing:-.01em}
-  .eyebrow{
-    font-family:"IBM Plex Mono",monospace;
-    font-size:12px;letter-spacing:.22em;text-transform:uppercase;
-    color:var(--brass);font-weight:500;
-  }
-  .mono{font-family:"IBM Plex Mono",monospace}
-
-  /* ---- nav ---- */
-  nav{
-    position:relative;z-index:2;
-    display:flex;align-items:center;justify-content:space-between;
-    padding:22px 0;border-bottom:1px solid var(--line);
-  }
-  .brandmark{display:flex;align-items:baseline;gap:11px}
-  .brandmark .name{
-    font-family:"Zilla Slab",serif;font-weight:700;font-size:19px;letter-spacing:.02em;
-  }
-  .brandmark .name .drov{color:var(--brass)}
-  .tag{
-    font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.18em;
-    text-transform:uppercase;color:var(--dust-dim);
-    border:1px solid var(--line);border-radius:2px;padding:3px 7px;
-  }
-  nav .right{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.1em;color:var(--dust);text-transform:uppercase}
-
-  /* ---- hero ---- */
-  .hero{padding:84px 0 72px;position:relative}
-  .hero .eyebrow{margin-bottom:26px;display:block}
-  .hero h1{font-size:clamp(40px,7vw,76px);margin-bottom:10px}
-  .hero .line2{
-    font-family:"Zilla Slab",serif;font-weight:500;
-    font-size:clamp(20px,3vw,30px);line-height:1.22;color:var(--brass);
-    max-width:24ch;margin-bottom:34px;letter-spacing:-.005em;
-  }
-  .hero .lede{max-width:60ch;color:var(--dust);font-size:18.5px}
-  .hero .lede strong{color:var(--bone);font-weight:500}
-
-  /* compass / scout instrument mark, ambient */
-  .compass{
-    position:absolute;top:48px;right:-10px;width:170px;height:170px;
-    opacity:.5;pointer-events:none;
-  }
-  @media(max-width:760px){.compass{display:none}}
-
-  /* ---- section scaffolding ---- */
-  section{padding:64px 0;border-top:1px solid var(--line-soft);position:relative}
-  .sec-eyebrow{margin-bottom:18px;display:block}
-  .sec-head{font-size:clamp(28px,4.2vw,42px);margin-bottom:22px;max-width:18ch}
-  .sec-body{max-width:62ch;color:var(--dust);font-size:18px}
-  .sec-body strong{color:var(--bone);font-weight:500}
-
-  .pullquote{
-    font-family:"Zilla Slab",serif;font-weight:600;
-    font-size:clamp(24px,3.6vw,34px);line-height:1.2;color:var(--brass);
-    margin:34px 0 4px;max-width:20ch;letter-spacing:-.01em;
-  }
-  .pullquote .sub{display:block;font-family:"IBM Plex Sans",sans-serif;font-weight:400;font-size:15px;color:var(--dust-dim);letter-spacing:0;margin-top:12px}
-
-  /* ---- strata signature ---- */
-  .strata-grid{display:grid;grid-template-columns:minmax(220px,300px) 1fr;gap:46px;align-items:center;margin-top:42px}
-  @media(max-width:760px){.strata-grid{grid-template-columns:1fr;gap:30px}}
-  .strata-svg{width:100%;height:auto;display:block}
-  .layers{display:flex;flex-direction:column;gap:2px}
-  .layer{
-    display:grid;grid-template-columns:34px 1fr;gap:14px;
-    padding:15px 0;border-bottom:1px solid var(--line-soft);
-  }
-  .layer:last-child{border-bottom:none}
-  .layer .num{
-    font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--brass);
-    padding-top:2px;letter-spacing:.04em;
-  }
-  .layer .lname{font-family:"Zilla Slab",serif;font-weight:600;font-size:19px;letter-spacing:.005em}
-  .layer .ldesc{color:var(--dust);font-size:14.5px;line-height:1.5;margin-top:3px}
-  .layer .ldesc b{color:var(--patina);font-weight:500}
-  .layer.bedrock .lname{color:var(--bone)}
-  .layer.overlay .lname{color:var(--dust)}
-  .layer.overlay .num{color:var(--dust-dim)}
-
-  /* grammar 1.5 — subordinate sub-row fused to the Ontology bedrock */
-  .sublayer{
-    display:grid;grid-template-columns:30px 1fr;gap:11px;
-    margin-top:12px;padding:11px 0 2px 13px;
-    border-top:1px dashed var(--line);
-    border-left:1px solid var(--line-soft);
-  }
-  .sublayer .snum{
-    font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--dust-dim);
-    letter-spacing:.04em;padding-top:2px;
-  }
-  .sublayer .sname{
-    font-family:"Zilla Slab",serif;font-weight:600;font-size:15px;color:var(--dust);
-    letter-spacing:.005em;
-  }
-  .sublayer .sdesc{display:block;color:var(--dust-dim);font-size:13px;line-height:1.5;margin-top:2px}
-  .sublayer .sdesc b{color:var(--patina);font-weight:500}
-
-  /* ---- boundary cards ---- */
-  .cards{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:40px;background:var(--line);border:1px solid var(--line);border-radius:3px;overflow:hidden}
-  @media(max-width:680px){.cards{grid-template-columns:1fr}}
-  .card{background:var(--surface);padding:30px 28px;position:relative}
-  .card .ct{
-    font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;
-    text-transform:uppercase;color:var(--patina);margin-bottom:13px;display:flex;align-items:center;gap:9px;
-  }
-  .card .ct::before{content:"";width:6px;height:6px;background:var(--patina);border-radius:50%;flex:none}
-  .card h3{font-size:21px;margin-bottom:9px;line-height:1.15}
-  .card p{color:var(--dust);font-size:15.5px;line-height:1.55}
-  .card .wry{color:var(--dust-dim);font-style:italic;font-size:14.5px;display:block;margin-top:9px}
-
-  /* ---- receipt ---- */
-  .receipt-wrap{margin-top:38px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
-  @media(max-width:760px){.receipt-wrap{grid-template-columns:1fr;max-width:620px}}
-  .receipt{
-    background:var(--surface);border:1px solid var(--line);border-radius:3px;
-    font-family:"IBM Plex Mono",monospace;font-size:13.5px;line-height:1.75;
-    color:var(--dust);overflow:hidden;
-  }
-  .receipt .rhead{
-    background:var(--surface-2);padding:12px 20px;border-bottom:1px solid var(--line);
-    color:var(--bone);letter-spacing:.04em;display:flex;justify-content:space-between;align-items:center;
-  }
-  .receipt .rhead .tg{color:var(--dust-dim);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
-  .receipt .rbody{padding:18px 20px}
-  .receipt .row{display:grid;grid-template-columns:108px 1fr;gap:8px;align-items:start}
-  .receipt .k{color:var(--dust-dim);text-transform:uppercase;font-size:11.5px;letter-spacing:.08em;padding-top:2px}
-  .receipt .v{color:var(--bone)}
-  .receipt .v.warn{color:var(--brass)}
-  .receipt .v.verd{color:var(--brass);font-weight:500}
-  .receipt .v.ok{color:var(--patina)}
-  .receipt .note{color:var(--dust);font-size:12.5px;line-height:1.5;display:block;margin-top:3px}
-  .receipt .rule{height:1px;background:var(--line-soft);margin:13px 0}
-
-  /* ---- closing ---- */
-  .closing{padding:78px 0 30px;border-top:1px solid var(--line-soft)}
-  .closing .big{font-size:clamp(26px,4vw,40px);max-width:22ch;line-height:1.15}
-  .closing .big .brass{color:var(--brass)}
-  .closing .rovers{
-    margin-top:30px;font-family:"IBM Plex Mono",monospace;font-size:12.5px;
-    letter-spacing:.06em;color:var(--dust-dim);max-width:52ch;
-  }
-  .closing .rovers b{color:var(--patina);font-weight:500}
-
-  footer{padding:36px 0 60px;border-top:1px solid var(--line);margin-top:40px;
-    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
-  footer .fnote{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--dust-dim);letter-spacing:.04em}
-  footer .fnote b{color:var(--patina);font-weight:500}
-  footer .fmark{
-    font-family:"Zilla Slab",serif;font-weight:700;font-size:15px;letter-spacing:.03em;color:var(--dust);
-    display:flex;align-items:center;gap:12px;margin-left:auto;
-  }
-  footer .fmark img{
-    width:40px;height:auto;display:block;flex:none;
-    opacity:.75;transition:opacity .3s ease;
-  }
-  footer .fmark:hover img{opacity:1}
-  @media(max-width:680px){footer .fmark{margin-left:0}}
-
-  /* ambient herd mark, bottom-right of the closing panel — counterweight
-     to the hero compass. Live in the closing section markup. */
-  .closing{overflow:hidden}
-  .herd{
-    position:absolute;right:0;bottom:-14px;width:280px;height:auto;
-    opacity:.09;pointer-events:none;user-select:none;z-index:0;
-  }
-  .closing .wrap{position:relative}
-  .closing .wrap > p{position:relative;z-index:1}
-  @media(max-width:760px){.herd{display:none}}
-
-  /* ---- reveal ---- */
-  .reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
-  .reveal.in{opacity:1;transform:none}
-  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
-
-  a{color:inherit}
-  ::selection{background:var(--brass);color:var(--ground)}
-  :focus-visible{outline:2px solid var(--brass);outline-offset:3px}
-</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
 </head>
 <body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;min-height:100%}
+  html{scroll-behavior:smooth}
+  a{color:inherit}
+  a:hover{opacity:.85}
+  .strip{height:12px;transition:height .35s ease}
+  .strip:hover{height:64px}
+  .strip .leak{opacity:0;transition:opacity .3s ease .12s}
+  .strip:hover .leak{opacity:1}
+  .filing:hover{background:var(--cardHover);opacity:1}
+</style>
+</helmet>
+<div ref="{{ rootRef }}" style="--bg:#efebe0;--card:#f7f4ea;--cardHover:#efe9d8;--ink:#21262f;--head:#21262f;--sub:#4c5261;--muted:#8a8371;--line:#d8d2c2;--border:#21262f;--accent:#9a6524;--accentText:#9a6524;--pillText:#f7f4ea;--tickerBg:#21262f;--tickerText:#b6ad97;--tickerDim:#5c6474;--footerBg:#21262f;--footerText:#9aa0ad;--footerHead:#c9c2b0;--footerBright:#e6e0d0;--footerLine:#3a4150;--footerDim:#5c6474;--dash:#a89f8a;--osw:Oswald,Arial,sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace;background:var(--bg);color:var(--ink);min-height:100vh;transition:background .5s ease;font-family:Arial,Helvetica,sans-serif;container-type:inline-size">
 
-<div class="wrap">
-  <nav>
-    <div class="brandmark">
-      <img src="longhorn-mark.png" alt="" aria-hidden="true" style="width:30px;height:auto;display:block;align-self:center;opacity:.9">
-      <span class="name">Code<span class="drov">Drovers</span></span>
-      <span class="tag">Showcase</span>
+  <div style="background:var(--tickerBg);color:var(--tickerText);font-size:10.5px;letter-spacing:.1em;padding:8px clamp(14px,2.5cqw,24px);display:flex;gap:16px;align-items:center;overflow:hidden;white-space:nowrap;font-family:var(--osw);transition:background .5s ease">
+    <span style="flex:none;color:var(--accent);letter-spacing:.2em;border:1px solid var(--footerLine);padding:2px 8px">ACTIVE PRACTICE</span>
+    <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis">SURVEYOR AGENTS &nbsp;&#9670;&nbsp; SCOPING AGENTS &nbsp;&#9670;&nbsp; FILE FORENSICS &nbsp;&#9670;&nbsp; MCP SERVERS &nbsp;&#9670;&nbsp; WORKSPACE DIAGNOSTICS &nbsp;&#9670;&nbsp; EVALS &amp; BENCHMARKS &nbsp;&#9670;&nbsp; DISCOVERY AGENDAS &nbsp;&#9670;&nbsp; CONTRACT ENGAGEMENTS &nbsp;&#9670;&nbsp; READ-ONLY ACCESS</span>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:18px clamp(18px,4cqw,40px);border-bottom:1.5px solid var(--border);gap:12px 16px">
+    <div style="display:flex;align-items:center;gap:10px;font-family:var(--osw);font-weight:600;font-size:17px;letter-spacing:.24em;color:var(--head)">
+      <span style="flex:none;background:var(--tickerBg);border:1.5px solid var(--border);padding:4px 6px;display:flex;align-items:center;transition:background .5s ease"><img src="assets/longhorn-mark.png" alt="CodeDrovers longhorn" style="height:18px;width:auto;display:block"></span>
+      <span>CODEDROVERS</span>
     </div>
-    <span class="right">Field Diagnostic</span>
-  </nav>
-</div>
-
-<!-- HERO -->
-<header class="hero">
-  <div class="wrap">
-    <svg class="compass" viewBox="0 0 100 100" fill="none" aria-hidden="true">
-      <circle cx="50" cy="50" r="46" stroke="#3A352C" stroke-width="1"/>
-      <circle cx="50" cy="50" r="34" stroke="#3A352C" stroke-width="1"/>
-      <path d="M50 8 L56 50 L50 60 L44 50 Z" fill="#C8893A"/>
-      <path d="M50 92 L44 50 L50 40 L56 50 Z" fill="#7C725F"/>
-      <circle cx="50" cy="50" r="3" fill="#E8E1D3"/>
-      <g stroke="#3A352C" stroke-width="1">
-        <line x1="50" y1="4" x2="50" y2="14"/><line x1="50" y1="86" x2="50" y2="96"/>
-        <line x1="4" y1="50" x2="14" y2="50"/><line x1="86" y1="50" x2="96" y2="50"/>
-      </g>
-    </svg>
-    <span class="eyebrow">Field Diagnostic · Surveying Agent</span>
-    <h1>A Surveyor Agent doesn't replace you.</h1>
-    <p class="line2">He replaces the consulting engagement that would audit the architecture you oversee.</p>
-    <p class="lede">An <strong>episodic, evidence-bound</strong> diagnostic agent for marketing data architecture. He rides out when you call, reads the terrain, and tells you what's actually true — then hands the decision back to you. He doesn't act. He doesn't linger. <strong>He is not another autopilot.</strong></p>
+    <div style="display:flex;flex-wrap:wrap;gap:12px 22px;font-size:11px;letter-spacing:.14em;align-items:center;font-family:var(--osw)">
+      <a href="#practice" style="color:var(--sub);text-decoration:none">PRACTICE</a>
+      <a href="#reports" style="color:var(--sub);text-decoration:none">FIELD REPORTS</a>
+      <a href="mailto:kellybrady@indifferencer.com?subject=Request%20a%20survey" style="color:var(--sub);text-decoration:none">ENGAGE</a>
+      <button onClick="{{ toggle }}" title="Lighting is allocated automatically at 6:00 PM local time. Manual overrides are noted in your file." style="cursor:pointer;color:var(--accentText);border:1px solid var(--accentText);padding:5px 12px;font-weight:600;userSelect:none;background:none;font-size:11px;letter-spacing:.14em;font-family:var(--osw);white-space:nowrap">{{ toggleLabel }}</button>
+    </div>
   </div>
-</header>
 
-<!-- THE TERRAIN -->
-<section class="reveal">
-  <div class="wrap">
-    <span class="eyebrow sec-eyebrow">The ground you inherit</span>
-    <h2 class="sec-head">Every stack has terrain nobody mapped.</h2>
-    <p class="sec-body">You inherit a data architecture no one fully documented. The spec says one thing; the system does another. A field has been dead since a platform sunset. A capability is wired up and hasn't fired in months. From the outside it all looks integrated — one pipeline, one source of truth. A Surveyor's whole job lives in the gap between what the diagram claims and what the system actually does.</p>
-    <p class="pullquote">Present isn't the same as working.
-      <span class="sub">A capability that exists but hasn't run is not a capability you can rely on. A Surveyor Agent checks both.</span>
-    </p>
+  <div style="padding:clamp(34px,5cqw,54px) clamp(18px,4cqw,40px) 38px;border-bottom:1px solid var(--line)">
+    <div style="font-size:clamp(9.5px,1.1cqw,11px);letter-spacing:.3em;color:var(--accentText);font-family:var(--osw)">&mdash; THE WORKING PRACTICE OF INDIFFERENCER LLC &mdash;</div>
+    <h1 style="font-family:var(--osw);font-weight:600;font-size:clamp(30px,5.4cqw,52px);line-height:1.05;letter-spacing:.02em;margin:16px 0 0;max-width:18ch;text-transform:uppercase;color:var(--head)">We Do the Actual Work.</h1>
+    <p style="font-size:14.5px;line-height:1.7;color:var(--sub);max-width:56ch;margin:18px 0 0">Diagnostic agents, scoping agents, and MCP servers for marketing data architecture. Read-only by design: they inspect, report, and hand the decision back to you. Staffed by one human and an ensemble of Claudes. All of this is billable.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:20px 40px;margin-top:28px;font-family:var(--osw)">
+      <span title="Read-only by design. The zero is the product." style="font-size:11px;letter-spacing:.12em;color:var(--muted)"><strong style="display:block;font-size:24px;letter-spacing:0;color:var(--head);font-weight:600">0</strong>SYSTEMS WRITTEN TO</span>
+      <span style="font-size:11px;letter-spacing:.12em;color:var(--muted)"><strong style="display:block;font-size:24px;letter-spacing:0;color:var(--head);font-weight:600">100%</strong>FINDINGS RE-DERIVABLE</span>
+      <span title="Identity, events, value, intent, consent, object." style="font-size:11px;letter-spacing:.12em;color:var(--muted)"><strong style="display:block;font-size:24px;letter-spacing:0;color:var(--head);font-weight:600">6</strong>ONTOLOGY PRIMITIVES</span>
+      <span style="font-size:11px;letter-spacing:.12em;color:var(--muted)"><strong style="display:block;font-size:24px;letter-spacing:0;color:var(--head);font-weight:600">1</strong>HUMAN ACCOUNTABLE</span>
+    </div>
   </div>
-</section>
 
-<!-- HOW HE READS IT -->
-<section class="reveal">
-  <div class="wrap">
-    <span class="eyebrow sec-eyebrow">How he reads it</span>
-    <h2 class="sec-head">Bedrock up — never the other way around.</h2>
-    <p class="sec-body">A Surveyor Agent never starts from a vendor's playbook. He starts from what must be true of <em>any</em> engagement system, and only lets platform-specific models sit on top — as an overlay, never the foundation. Read the cross-section from the bottom.</p>
+  <div id="practice" style="padding:34px clamp(18px,4cqw,40px) 44px;scroll-margin-top:12px">
+    <div style="font-size:clamp(9.5px,1.1cqw,11px);letter-spacing:.26em;color:var(--accentText);margin-bottom:6px;font-family:var(--osw)">&mdash; PRACTICE &middot; READ-ONLY BY DESIGN &mdash;</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:18px;font-style:italic">Each capability is displayed behind a field strip. Hovering is safe; the strips are read-only too.</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px">
 
-    <div class="strata-grid">
-      <svg class="strata-svg" viewBox="0 0 300 260" fill="none" aria-label="Five-layer truth model drawn as a terrain cross-section">
-        <defs>
-          <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-            <line x1="0" y1="0" x2="0" y2="6" stroke="#3A352C" stroke-width="1"/>
-          </pattern>
-        </defs>
-        <!-- Framework (overlay, dashed, removable) -->
-        <path d="M0 30 Q75 18 150 26 T300 24 L300 56 L0 56 Z" fill="none" stroke="#7C725F" stroke-width="1.2" stroke-dasharray="4 4"/>
-        <text x="10" y="48" font-family="IBM Plex Mono, monospace" font-size="10" fill="#7C725F" letter-spacing="1">FRAMEWORK · overlay</text>
-        <!-- Patterns -->
-        <path d="M0 60 Q70 52 150 58 T300 56 L300 96 L0 96 Z" fill="#2A261F" stroke="#3A352C" stroke-width="1"/>
-        <text x="10" y="83" font-family="IBM Plex Mono, monospace" font-size="10" fill="#A89B85" letter-spacing="1">PATTERNS</text>
-        <!-- Capability (the live layer, brass) -->
-        <path d="M0 100 Q80 90 150 98 T300 96 L300 144 L0 144 Z" fill="#2A261F" stroke="#C8893A" stroke-width="1.4"/>
-        <text x="10" y="118" font-family="IBM Plex Mono, monospace" font-size="10" fill="#C8893A" letter-spacing="1">CAPABILITY</text>
-        <text x="10" y="132" font-family="IBM Plex Mono, monospace" font-size="8.5" fill="#7BA08B" letter-spacing=".5">present · live · materialized</text>
-        <!-- Platform Type (gate) -->
-        <path d="M0 148 Q75 142 150 146 T300 144 L300 184 L0 184 Z" fill="#211E18" stroke="#3A352C" stroke-width="1"/>
-        <text x="10" y="170" font-family="IBM Plex Mono, monospace" font-size="10" fill="#A89B85" letter-spacing="1">PLATFORM TYPE · gate</text>
-        <!-- Grammar (1.5) — a thin seam fused to the bedrock, not a peer band -->
-        <path d="M0 188 L300 188 L300 204 L0 204 Z" fill="url(#hatch)" stroke="#7C725F" stroke-width="1" stroke-dasharray="2 3"/>
-        <rect x="0" y="188" width="300" height="16" fill="#181613" fill-opacity="0.4"/>
-        <text x="22" y="199" font-family="IBM Plex Mono, monospace" font-size="8.5" fill="#A89B85" letter-spacing=".5">1.5 · grammar — how the primitives relate</text>
-        <!-- Ontology (bedrock, hatched, solid) — Grammar rides on its top course -->
-        <path d="M0 204 L300 204 L300 252 L0 252 Z" fill="url(#hatch)" stroke="#E8E1D3" stroke-width="1.4"/>
-        <rect x="0" y="204" width="300" height="48" fill="#181613" fill-opacity="0.55"/>
-        <text x="10" y="226" font-family="IBM Plex Mono, monospace" font-size="10" fill="#E8E1D3" letter-spacing="1">ONTOLOGY · bedrock</text>
-        <text x="10" y="240" font-family="IBM Plex Mono, monospace" font-size="8.5" fill="#A89B85" letter-spacing=".5">always first — never skipped</text>
-      </svg>
-
-      <div class="layers">
-        <div class="layer overlay">
-          <span class="num">05</span>
-          <div><span class="lname">Framework</span><div class="ldesc">A vendor's implementation model. Applied only on top, only when the platform is confirmed. <b>An overlay, never the truth underneath.</b></div></div>
-        </div>
-        <div class="layer">
-          <span class="num">04</span>
-          <div><span class="lname">Patterns</span><div class="ldesc">Which behaviors are actually possible. Constrained by capability — <b>never assumed into existence.</b></div></div>
-        </div>
-        <div class="layer">
-          <span class="num">03</span>
-          <div><span class="lname">Capability</span><div class="ldesc">What the system actually does. Valid only if <b>present, live, and materialized</b> — a stale or unlinked capability blocks execution like a missing one.</div></div>
-        </div>
-        <div class="layer">
-          <span class="num">02</span>
-          <div><span class="lname">Platform Type</span><div class="ldesc">The role the system plays, by what it does — not its brand name. <b>A gate, not a label.</b></div></div>
-        </div>
-        <div class="layer bedrock">
-          <span class="num">01</span>
-          <div>
-            <span class="lname">Ontology</span><div class="ldesc">What must exist in any system: identity, events, value, intent, consent, object. <b>The bedrock. Evaluated first, always.</b></div>
-            <div class="sublayer">
-              <span class="snum">1.5</span>
-              <div><span class="sname">Grammar</span><span class="sdesc">how those primitives <b>relate</b> — a typed graph riding on the bedrock. Not a sixth layer; the structure on the first.</span></div>
-            </div>
+      <div style="background:var(--card);border:1.5px solid var(--border);display:flex;flex-direction:column;transition:background .5s ease">
+        <div style="padding:18px 18px 14px;flex:1;display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+            <span style="font-family:var(--osw);font-size:9.5px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase">The Surveyor</span>
+            <span style="flex:none;font-family:var(--osw);font-size:9.5px;letter-spacing:.1em;padding:2px 8px;background:var(--accent);color:var(--pillText);text-transform:uppercase">Rides on Call</span>
           </div>
+          <div style="font-family:var(--osw);font-weight:600;font-size:17px;line-height:1.25;text-transform:uppercase;letter-spacing:.03em;color:var(--head)">Field Diagnostics</div>
+          <div style="font-size:12px;line-height:1.55;color:var(--sub);flex:1">An episodic, evidence-bound diagnostic agent for marketing data architecture. He reads the terrain, tells you what's actually true, and hands the decision back.</div>
+          <a href="/surveyor.html" style="font-family:var(--osw);font-size:10.5px;letter-spacing:.16em;color:var(--head);font-weight:600;text-decoration:none">&mdash; ENTER &mdash;</a>
         </div>
+        <a class="strip" href="/surveyor.html" title="Field strip — read-only, like everything else here" style="display:block;overflow:hidden;position:relative;border-top:1.5px solid var(--border);background:#181613;text-decoration:none">
+          <span class="leak" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.2;padding:0 14px;color:#c8893a;font-family:var(--mono);font-size:12px;letter-spacing:.18em">PRESENT ISN'T THE SAME AS WORKING</span>
+        </a>
       </div>
+
+      <div style="background:var(--card);border:1.5px solid var(--border);display:flex;flex-direction:column;transition:background .5s ease">
+        <div style="padding:18px 18px 14px;flex:1;display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+            <span style="font-family:var(--osw);font-size:9.5px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase">The Scout</span>
+            <span style="flex:none;font-family:var(--osw);font-size:9.5px;letter-spacing:.1em;padding:2px 8px;background:var(--accent);color:var(--pillText);text-transform:uppercase">Read-Only</span>
+          </div>
+          <div style="font-family:var(--osw);font-weight:600;font-size:17px;line-height:1.25;text-transform:uppercase;letter-spacing:.03em;color:var(--head)">Scoping &amp; Discovery</div>
+          <div style="font-size:12px;line-height:1.55;color:var(--sub);flex:1">An agent that reasons like a senior implementation architect: close-reads the request, introspects the workspace read-only, classifies the gaps, and returns a discovery agenda for the next client conversation.</div>
+          <a href="/scout.html" style="font-family:var(--osw);font-size:10.5px;letter-spacing:.16em;color:var(--head);font-weight:600;text-decoration:none">&mdash; ENTER &mdash;</a>
+        </div>
+        <a class="strip" href="/scout.html" title="Field strip — read-only, like everything else here" style="display:block;overflow:hidden;position:relative;border-top:1.5px solid var(--border);background:#211e18;text-decoration:none">
+          <span class="leak" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.2;padding:0 14px;color:#e8e1d3;font-family:var(--mono);font-size:12px;letter-spacing:.18em">THE MAP BEFORE THE RIDE</span>
+        </a>
+      </div>
+
+      <div style="background:var(--card);border:1.5px solid var(--border);display:flex;flex-direction:column;transition:background .5s ease">
+        <div style="padding:18px 18px 14px;flex:1;display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+            <span style="font-family:var(--osw);font-size:9.5px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase">Workspace MCP</span>
+            <span style="flex:none;font-family:var(--osw);font-size:9.5px;letter-spacing:.1em;padding:2px 8px;background:var(--accent);color:var(--pillText);text-transform:uppercase">In Service</span>
+          </div>
+          <div style="font-family:var(--osw);font-weight:600;font-size:17px;line-height:1.25;text-transform:uppercase;letter-spacing:.03em;color:var(--head)">MCP Servers</div>
+          <div style="font-size:12px;line-height:1.55;color:var(--sub);flex:1">Read-only MCP servers giving an agent honest access to Segment, Klaviyo, mParticle, and Coda workspaces. Inspection without hands on the controls.</div>
+          <a href="mailto:kellybrady@indifferencer.com?subject=Workspace%20MCP" style="font-family:var(--osw);font-size:10.5px;letter-spacing:.16em;color:var(--head);font-weight:600;text-decoration:none">&mdash; ENGAGE &mdash;</a>
+        </div>
+        <a class="strip" href="mailto:kellybrady@indifferencer.com?subject=Workspace%20MCP" title="Field strip — read-only, like everything else here" style="display:block;overflow:hidden;position:relative;border-top:1.5px solid var(--border);background:#181613;text-decoration:none">
+          <span class="leak" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.2;padding:0 14px;color:#7ba08b;font-family:var(--mono);font-size:12px;letter-spacing:.18em">READ-ONLY BY DESIGN</span>
+        </a>
+      </div>
+
+      <div style="background:var(--card);border:1.5px solid var(--border);display:flex;flex-direction:column;transition:background .5s ease">
+        <div style="padding:18px 18px 14px;flex:1;display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+            <span style="font-family:var(--osw);font-size:9.5px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase">Cane</span>
+            <span style="flex:none;font-family:var(--osw);font-size:9.5px;letter-spacing:.1em;padding:2px 8px;background:var(--accent);color:var(--pillText);text-transform:uppercase">Shipped &middot; MIT</span>
+          </div>
+          <div style="font-family:var(--osw);font-weight:600;font-size:17px;line-height:1.25;text-transform:uppercase;letter-spacing:.03em;color:var(--head)">File Forensics</div>
+          <div style="font-size:12px;line-height:1.55;color:var(--sub);flex:1">A local MCP server that hands your assistant deterministic evidence about your files &mdash; which of twenty near-identical drafts is the survivor, and why the difference matters. It diagnoses only; it never moves, renames, or deletes.</div>
+          <a href="https://github.com/kellyorkin/cane-mcp" style="font-family:var(--osw);font-size:10.5px;letter-spacing:.16em;color:var(--head);font-weight:600;text-decoration:none">&mdash; ENTER &mdash;</a>
+        </div>
+        <a class="strip" href="https://github.com/kellyorkin/cane-mcp" title="Field strip — read-only, like everything else here" style="display:block;overflow:hidden;position:relative;border-top:1.5px solid var(--border);background:#181613;text-decoration:none">
+          <span class="leak" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.2;padding:0 14px;color:#a89b85;font-family:var(--mono);font-size:12px;letter-spacing:.18em">IT PROPOSES; YOUR HAND ACTS</span>
+        </a>
+      </div>
+
+      <div style="background:var(--card);border:1.5px solid var(--border);display:flex;flex-direction:column;transition:background .5s ease">
+        <div style="padding:18px 18px 14px;flex:1;display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+            <span style="font-family:var(--osw);font-size:9.5px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase">Engagements</span>
+            <span style="flex:none;font-family:var(--osw);font-size:9.5px;letter-spacing:.1em;padding:2px 8px;background:var(--accent);color:var(--pillText);text-transform:uppercase">Accepting</span>
+          </div>
+          <div style="font-family:var(--osw);font-weight:600;font-size:17px;line-height:1.25;text-transform:uppercase;letter-spacing:.03em;color:var(--head)">Contract Work</div>
+          <div style="font-size:12px;line-height:1.55;color:var(--sub);flex:1">Surveys, scoping, and architecture reviews, on engagement. The recommendation &mdash; and the accountability &mdash; stays human.</div>
+          <a href="https://korkworks.com" style="font-family:var(--osw);font-size:10.5px;letter-spacing:.16em;color:var(--head);font-weight:600;text-decoration:none">&mdash; ENTER &mdash;</a>
+        </div>
+        <a class="strip" href="https://korkworks.com" title="Field strip — read-only, like everything else here" style="display:block;overflow:hidden;position:relative;border-top:1.5px solid var(--border);background:#211e18;text-decoration:none">
+          <span class="leak" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.2;padding:0 14px;color:#d9bd6a;font-family:var(--mono);font-size:12px;letter-spacing:.18em">THE HANDS STAY YOURS</span>
+        </a>
+      </div>
+
     </div>
   </div>
-</section>
 
-<!-- TRUSTWORTHY -->
-<section class="reveal">
-  <div class="wrap">
-    <span class="eyebrow sec-eyebrow">Why he's trusted</span>
-    <h2 class="sec-head">The trust comes from the limits.</h2>
-    <p class="sec-body">A Surveyor Agent is useful because of what he refuses to do. Every boundary below is deliberate — and every one is the reason a wary operator can hand him the keys to look without worrying he'll turn them.</p>
-
-    <div class="cards">
-      <div class="card">
-        <span class="ct">Diagnose, not execute</span>
-        <h3>He reads. He doesn't touch.</h3>
-        <p>A Surveyor Agent inspects and reports. He never writes to your system, never changes a setting, never acts on your behalf. The hands on the controls stay yours.</p>
-      </div>
-      <div class="card">
-        <span class="ct">Scout, not sentry</span>
-        <h3>He rides out, then he's gone.</h3>
-        <p>He runs when you call him and stops when he's done. No always-on watching, no background process, no heartbeat. Episodic by design.</p>
-        <span class="wry">He won't monitor your stack at 3 a.m. That was never the job.</span>
-      </div>
-      <div class="card">
-        <span class="ct">Maps terrain, not destinations</span>
-        <h3>He lays out the options. You choose.</h3>
-        <p>A Surveyor Agent shows what's possible across the ground and where it's blocked. He won't pick your route. The recommendation — and the accountability — stays human.</p>
-      </div>
-      <div class="card">
-        <span class="ct">Receipts, and honest edges</span>
-        <h3>He tells you what he can't see.</h3>
-        <p>Every finding carries its evidence and can be re-derived from it. When something's out of view, he says so, plainly, instead of guessing past it.</p>
-        <span class="wry">A low bar a surprising amount of software fails to clear.</span>
-      </div>
+  <div id="reports" style="padding:0 clamp(18px,4cqw,40px) 44px;scroll-margin-top:12px">
+    <div style="font-size:clamp(9.5px,1.1cqw,11px);letter-spacing:.26em;color:var(--accentText);margin-bottom:14px;font-family:var(--osw)">&mdash; FIELD REPORTS &middot; ALL FINDINGS RE-DERIVABLE &mdash;</div>
+    <div style="background:var(--card);border:1.5px solid var(--border);transition:background .5s ease">
+      <a class="filing" href="/surveyor.html" style="display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 18px;padding:15px 20px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none">
+        <span style="font-family:var(--osw);font-size:10.5px;color:var(--muted);letter-spacing:.1em">In the field</span>
+        <span style="font-family:var(--osw);font-size:10px;letter-spacing:.12em;color:var(--accentText);margin-left:auto;text-transform:uppercase">The Surveyor &rarr;</span>
+        <span style="font-size:13px;line-height:1.55;width:100%">A Surveyor Agent doesn't replace you. He replaces the consulting engagement that would audit the architecture you oversee.</span>
+      </a>
+      <a class="filing" href="/scout.html" style="display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 18px;padding:15px 20px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none">
+        <span style="font-family:var(--osw);font-size:10.5px;color:var(--muted);letter-spacing:.1em">Pre-scope</span>
+        <span style="font-family:var(--osw);font-size:10px;letter-spacing:.12em;color:var(--accentText);margin-left:auto;text-transform:uppercase">The Scout &rarr;</span>
+        <span style="font-size:13px;line-height:1.55;width:100%">On a demo workspace, all 12 standard taxonomy slots were null despite 27 event types flowing &mdash; the kind of finding that changes a client conversation before a single use case is scoped.</span>
+      </a>
+      <a class="filing" href="https://github.com/kellyorkin/codedrovers" style="display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 18px;padding:15px 20px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none">
+        <span style="font-family:var(--osw);font-size:10.5px;color:var(--muted);letter-spacing:.1em">Engine room</span>
+        <span style="font-family:var(--osw);font-size:10px;letter-spacing:.12em;color:var(--accentText);margin-left:auto;text-transform:uppercase">Theo &rarr;</span>
+        <span style="font-size:13px;line-height:1.55;width:100%">A read-only discovery agent that audits a live Segment workspace and returns a structured discovery agenda.</span>
+      </a>
+      <a class="filing" href="https://github.com/kellyorkin/codedrovers/tree/main/testbed" style="display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 18px;padding:15px 20px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none">
+        <span style="font-family:var(--osw);font-size:10.5px;color:var(--muted);letter-spacing:.1em">Instrumented</span>
+        <span style="font-family:var(--osw);font-size:10px;letter-spacing:.12em;color:var(--accentText);margin-left:auto;text-transform:uppercase">The Testbed &rarr;</span>
+        <span style="font-size:13px;line-height:1.55;width:100%">A controlled Segment source &mdash; a known origin for web events, built to stress the web &rarr; Segment &rarr; Klaviyo boundary on purpose.</span>
+      </a>
+      <a class="filing" href="https://github.com/kellyorkin/codedrovers/tree/main/evals" style="display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 18px;padding:15px 20px;color:var(--ink);text-decoration:none">
+        <span style="font-family:var(--osw);font-size:10.5px;color:var(--muted);letter-spacing:.1em">Scored</span>
+        <span style="font-family:var(--osw);font-size:10px;letter-spacing:.12em;color:var(--accentText);margin-left:auto;text-transform:uppercase">Evals &rarr;</span>
+        <span style="font-size:13px;line-height:1.55;width:100%">Findings scored against a reference workspace. A scout who only ever alarms is a scout you stop believing.</span>
+      </a>
     </div>
   </div>
-</section>
 
-<!-- A FINDING -->
-<section class="reveal">
-  <div class="wrap">
-    <span class="eyebrow sec-eyebrow">A finding, the way he files it</span>
-    <h2 class="sec-head">What he hands back.</h2>
-    <p class="sec-body">A Surveyor finding isn't a verdict you have to trust — it's a verdict you can re-derive. Two findings from the same ride: one flag, one clean pass — because a scout who only ever alarms is a scout you stop believing. Run against a reference workspace.</p>
-
-    <div class="receipt-wrap">
-      <div class="receipt" role="img" aria-label="Example diagnostic finding showing presence, liveness, verdict, receipt, and a hedge">
-        <div class="rhead"><span>FINDING · events.capability</span><span class="tg">re-derivable</span></div>
-        <div class="rbody">
-          <div class="row"><span class="k">presence</span><span class="v ok">present</span></div>
-          <div class="row"><span class="k">liveness</span><span class="v warn">stale — last event 174 days ago</span></div>
-          <div class="row"><span class="k">verdict</span><span class="v verd">not functional<span class="note">Present is not working. A stale capability blocks execution exactly like a missing one.</span></span></div>
-          <div class="rule"></div>
-          <div class="row"><span class="k">receipt</span><span class="v">probe@v2 · capture #a83f9c · re-run to reproduce</span></div>
-          <div class="row"><span class="k">hedge</span><span class="v" style="color:var(--dust)">Activation path is not exposed to read-only access. Confirm directly before relying on this.</span></div>
+  <div style="background:var(--footerBg);color:var(--footerText);padding:36px clamp(18px,4cqw,40px) 28px;transition:background .5s ease">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:28px clamp(20px,3cqw,44px)">
+      <div style="flex:1 1 320px;min-width:0">
+        <div style="color:var(--footerBright);font-size:14px;font-weight:600;letter-spacing:.2em;font-family:var(--osw)">CODEDROVERS</div>
+        <div style="font-size:9.5px;letter-spacing:.22em;color:var(--accent);margin-top:6px;font-family:var(--osw)">&mdash; DRIVE DATA FORWARD &mdash;</div>
+        <div style="font-size:11.5px;line-height:1.7;margin-top:12px;font-style:italic">Practice note:<br>"No finding is also a finding."<span style="opacity:.7"><br>&mdash; The Surveyor, filed with receipts</span></div>
+      </div>
+      <div style="flex:0 0 auto">
+        <div style="color:var(--footerHead);font-size:10px;letter-spacing:.2em;margin-bottom:10px;font-family:var(--osw)">THE PRACTICE</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:12px">
+          <a href="/surveyor.html" style="color:var(--footerText);text-decoration:none">The Surveyor</a>
+          <a href="mailto:kellybrady@indifferencer.com?subject=Request%20a%20survey" style="color:var(--footerText);text-decoration:none">Request a Survey</a>
+          <a href="https://korkworks.com" style="color:var(--footerText);text-decoration:none">Kelly Orkin Brady</a>
+          <a href="https://indifferencer.com" style="color:var(--footerText);text-decoration:none">Indifferencer LLC</a>
         </div>
       </div>
-      <div class="receipt" role="img" aria-label="Example diagnostic finding with a clean functional verdict and no hedge required">
-        <div class="rhead"><span>FINDING · consent.capability</span><span class="tg">re-derivable</span></div>
-        <div class="rbody">
-          <div class="row"><span class="k">presence</span><span class="v ok">present</span></div>
-          <div class="row"><span class="k">liveness</span><span class="v ok">live — evaluated on last send, 2 days ago</span></div>
-          <div class="row"><span class="k">verdict</span><span class="v ok" style="font-weight:500">functional<span class="note">No finding is also a finding. He files the clean pass with the same receipts as the flag.</span></span></div>
-          <div class="rule"></div>
-          <div class="row"><span class="k">receipt</span><span class="v">probe@v2 · capture #a83fa1 · re-run to reproduce</span></div>
-          <div class="row"><span class="k">hedge</span><span class="v" style="color:var(--dust-dim)">none required.</span></div>
-        </div>
-      </div>
+      <img src="assets/longhorn-mark.png" alt="CodeDrovers longhorn" style="flex:0 0 auto;display:block;width:88px;height:auto">
+      <img src="assets/indifferencer-dark.svg" alt="Indifferencer — Nobile Nihil" style="flex:0 0 auto;display:block;width:100px">
     </div>
+    <div style="border-top:1px solid var(--footerLine);margin-top:26px;padding-top:14px;font-size:10.5px;line-height:1.8;color:var(--footerDim)">&copy; Indifferencer LLC &middot; CodeDrovers is the working practice of Indifferencer LLC. &middot; Demonstrated on reference workspaces; no client data lives here. &middot; No humans were harmed. One human was consulted, extensively.</div>
+    <div title="Production credits — visible upon inspection, like everything else here" style="margin-top:10px;font-size:10.5px;line-height:1.8;color:var(--footerBg);transition:color .4s ease" style-hover="color:var(--footerHead)">PRODUCTION CREDITS &mdash; Concept, copy, and design direction by one human person, who remains accountable for every decision therein. Built and delivered by a Claude ensemble. The satire is <a href="https://indifferencer.com" style="color:inherit;text-decoration:underline">next door</a>.</div>
   </div>
-</section>
-
-<!-- CLOSING -->
-<section class="closing reveal">
-
-  <div class="wrap">
-    <img class="herd" src="longhorn-mark.png" alt="" aria-hidden="true">
-    <p class="display big">He rides out, reads the ground, and tells you <span class="brass">straight</span>. Then he's gone until you call him again.</p>
-    <p class="rovers"><b>codedrovers</b> — autonomous scouts that range, read, and report. They don't run the territory. They survey it, and they come back with the map.</p>
-  </div>
-</section>
-
-<div class="wrap">
-  <p style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.04em;color:var(--dust-dim);max-width:60ch;margin:0 0 4px;line-height:1.6;">
-    A Surveyor Agent is a CodeDrovers scout, not a product — built and run in-house, shown here on a reference workspace.
-  </p>
-  <footer>
-    <span class="fnote">Demonstrated on a reference workspace. <b>No client data lives here.</b><br>
-    Surveyed by <a href="https://korkworks.com" style="color:var(--dust);text-decoration:none;border-bottom:1px solid var(--line)">Kelly Orkin Brady</a> · CodeDrovers, a practice of <a href="https://indifferencer.com" style="color:var(--dust);text-decoration:none;border-bottom:1px solid var(--line)">Indifferencer LLC</a> · <a href="mailto:kellybrady@indifferencer.com?subject=Request%20a%20survey" style="color:var(--brass);text-decoration:none;border-bottom:1px solid var(--brass)">request a survey</a></span>
-    <span class="fmark">
-      <img src="longhorn-mark.png" alt="" aria-hidden="true">
-      CodeDrovers
-    </span>
-  </footer>
 </div>
-
-<script>
-  (function(){
-    var els=document.querySelectorAll('.reveal');
-    if(!('IntersectionObserver' in window)||window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-      els.forEach(function(e){e.classList.add('in')});return;
-    }
-    var io=new IntersectionObserver(function(entries){
-      entries.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});
-    },{threshold:.14});
-    els.forEach(function(e){io.observe(e)});
-  })();
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;lighting&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;clock&quot;,&quot;day&quot;,&quot;after-hours&quot;],&quot;default&quot;:&quot;clock&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Scene&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#9a6524&quot;,&quot;#7c8a4e&quot;],&quot;default&quot;:&quot;#9a6524&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Scene&quot;}}">
+class Component extends DCLogic {
+  state = { after: null };
+  isAfter() {
+    if (this.state.after !== null) return this.state.after;
+    const mode = this.props.lighting ?? 'clock';
+    if (mode === 'day') return false;
+    if (mode === 'after-hours') return true;
+    const h = new Date().getHours();
+    return h >= 18 || h < 6;
+  }
+  vars() {
+    const day = { bg:'#efebe0', card:'#f7f4ea', cardHover:'#efe9d8', ink:'#21262f', head:'#21262f', sub:'#4c5261', muted:'#8a8371', line:'#d8d2c2', border:'#21262f', pillText:'#f7f4ea', tickerBg:'#21262f', tickerText:'#b6ad97', tickerDim:'#5c6474', footerBg:'#21262f', footerText:'#9aa0ad', footerHead:'#c9c2b0', footerBright:'#e6e0d0', footerLine:'#3a4150', footerDim:'#5c6474', dash:'#a89f8a' };
+    const after = { bg:'#21262f', card:'#282e39', cardHover:'#2e3542', ink:'#efebe0', head:'#efebe0', sub:'#9aa0ad', muted:'#7c8590', line:'#3a4150', border:'#3a4150', pillText:'#1a1f27', tickerBg:'#1a1f27', tickerText:'#b6ad97', tickerDim:'#5c6474', footerBg:'#1a1f27', footerText:'#9aa0ad', footerHead:'#c9c2b0', footerBright:'#e6e0d0', footerLine:'#3a4150', footerDim:'#5c6474', dash:'#4c5261' };
+    const dayAccent = this.props.accent ?? '#9a6524';
+    const nightMap = { '#9a6524':'#c8893a', '#7c8a4e':'#8b9457' };
+    const isAfter = this.isAfter();
+    const a = isAfter ? (nightMap[dayAccent] || dayAccent) : dayAccent;
+    return Object.assign({}, isAfter ? after : day, { accent: a, accentText: a });
+  }
+  apply() {
+    if (!this.rootEl) return;
+    const v = this.vars();
+    for (const k in v) this.rootEl.style.setProperty('--' + k, v[k]);
+  }
+  componentDidMount() { this.apply(); }
+  componentDidUpdate() { this.apply(); }
+  renderVals() {
+    return {
+      rootRef: (el) => { this.rootEl = el; if (el) this.apply(); },
+      toggle: () => this.setState({ after: !this.isAfter() }),
+      toggleLabel: this.isAfter() ? 'RESUME DAYTIME OPERATIONS \u2192' : 'AFTER-HOURS OPERATIONS BEGIN AT SIX \u2192',
+    };
+  }
+}
 </script>
-
 </body>
 </html>
