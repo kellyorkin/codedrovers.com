@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Field Ride · CodeDrovers</title>
+<title>Field Ride · CodeDrovers (v2 mock)</title>
 <meta name="description" content="A replay of a recorded Surveyor run against a reference workspace. Not a live agent, not a script.">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -153,6 +153,24 @@
   .report th{background:var(--surface-2);color:var(--bone);font-weight:500}
   .runstrip .v.cost{color:var(--patina)}
 
+  /* v2: sticky rail */
+  .rail{position:sticky;top:0;z-index:3;background:rgba(24,22,19,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line-soft)}
+  .rail .wrap{display:flex;gap:4px 22px;align-items:center;flex-wrap:wrap;padding-top:9px;padding-bottom:9px}
+  .rail a{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dust-dim);text-decoration:none;display:inline-flex;gap:8px;align-items:center}
+  .rail a .n{color:var(--brass)}
+  .rail a[aria-disabled="true"]{opacity:.4;pointer-events:none}
+  .rail a.on{color:var(--bone)}
+  .rail .scen{margin-left:auto;color:var(--dust)}
+  .rail .scen b{color:var(--brass);font-weight:500}
+  @media(max-width:600px){.rail .scen{display:none}}
+  /* v2: hero pointer + per-run note */
+  .pointer{margin-top:18px;display:inline-flex;gap:12px;align-items:baseline;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--dust)}
+  .pointer a{color:var(--brass);text-decoration:none;border-bottom:1px solid var(--brass)}
+  .runnote{margin-top:12px;font-family:"IBM Plex Mono",monospace;font-size:12.5px;line-height:1.6;color:var(--dust);border-left:2px solid var(--line);padding-left:12px}
+  .runnote b{color:var(--brass);font-weight:500;letter-spacing:.12em;text-transform:uppercase;font-size:10.5px;margin-right:8px}
+  /* v2: end-of-ride controls */
+  .after{margin-top:22px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .after .lede-sm{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dust-dim);width:100%}
   footer{padding:36px 0 60px;border-top:1px solid var(--line);margin-top:40px;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--dust-dim);line-height:1.8}
   a{color:inherit}
   ::selection{background:var(--brass);color:var(--ground)}
@@ -169,7 +187,7 @@
   <span class="run" id="topbar-run">RECORDED RUN &nbsp;&#9670;&nbsp; REPLAY ONLY &nbsp;&#9670;&nbsp; READ-ONLY ACCESS</span>
 </div>
 <div class="nav">
-  <a class="brand" href="/"><span class="mk"><img src="../longhorn-mark.png" alt="CodeDrovers longhorn"></span><span>CODEDROVERS</span></a>
+  <a class="brand" href="/"><span class="mk"><img src="longhorn-mark.png" alt="CodeDrovers longhorn"></span><span>CODEDROVERS</span></a>
   <div class="links">
     <a href="/surveyor">THE SURVEYOR</a>
     <a href="/#reports">FIELD REPORTS</a>
@@ -185,6 +203,7 @@
         <h1>Watch him read the terrain.</h1>
         <p class="line2">A replay of a real survey. Not a live agent, and not a script.</p>
         <p class="lede">Everything below was produced by the Surveyor in a recorded run against a <strong>reference workspace we own</strong>: every tool call, every result, every finding, in the order it happened. Nothing is typed in after the fact. The agent itself stays in the shop; <strong>this page only plays back what he did.</strong></p>
+        <div class="pointer"><span>Short on time?</span><a href="#" id="jump-pushback">Skip to the run &rarr;</a></div>
       </div>
       <div class="host"><img src="cody-host.png" alt="Cody, the CodeDrovers longhorn, in a three-piece suit holding a coffee mug and a Fixture Demo Agenda clipboard"></div>
     </div>
@@ -197,12 +216,22 @@
   </div>
 </header>
 
-<section>
+<nav class="rail" aria-label="On this page">
+  <div class="wrap">
+    <a href="#ask-sec" data-rail="ask-sec"><span class="n">01</span>The ask</a>
+    <a href="#ride-sec" data-rail="ride-sec"><span class="n">02</span>The ride</a>
+    <a href="#handback-sec" data-rail="handback-sec" aria-disabled="true"><span class="n">03</span>Handed back</a>
+    <span class="scen" id="rail-scen"></span>
+  </div>
+</nav>
+
+<section id="ask-sec">
   <div class="wrap">
     <div class="sec-head"><span class="num">01</span><h2>The ask</h2><span class="hint">as the architect gave it</span></div>
     <div class="ask">
       <p class="q" id="ask-q"></p>
       <div class="ctx" id="ask-ctx"></div>
+      <div class="runnote" id="runnote" hidden></div>
     </div>
     <div class="controls">
       <button class="btn" id="replay-btn">&#9654; Replay the ride</button>
@@ -211,13 +240,16 @@
   </div>
 </section>
 
-<section>
+<section id="ride-sec">
   <div class="wrap">
     <div class="sec-head"><span class="num">02</span><h2>The ride</h2><span class="hint">every tool call and result, in order</span></div>
     <div class="trace" id="trace"><div class="empty">Press replay. The recorded run plays back here, step by step.</div></div>
   </div>
 </section>
 
+<!-- Bearings: scaffolding, intentionally hidden. Shows each finding checked against ground / API / docs.
+     Stays hidden until Theo emits structured bearings or Cole annotates them from recorded tool results (labeled "annotated").
+     Never invent them. No renderer is wired yet; un-hiding alone shows an empty section. -->
 <section id="bearings-sec" hidden>
   <div class="wrap">
     <div class="sec-head"><span class="num">·</span><h2>The bearings</h2><span class="hint">ground · API · docs</span></div>
@@ -229,6 +261,7 @@
   <div class="wrap">
     <div class="sec-head"><span class="num">03</span><h2>Handed back</h2><span class="hint">he proposes · you decide</span></div>
     <div class="handback" id="handback"></div>
+    <div class="after" id="after"></div>
   </div>
 </section>
 
@@ -305,6 +338,22 @@
   function pretty(r){ try { return JSON.stringify(JSON.parse(r), null, 2); } catch(e){ return String(r); } }
   function gist(r){ var s = String(r).replace(/\s+/g,' '); return s.length > 150 ? s.slice(0,150) + '…' : s; }
 
+  // v2: one line per run on what this ride is for. Page-owned copy; the ride data stays untouched.
+  var NOTES = { liveness: 'One side only. He can reach Klaviyo but not Segment, and reports both before reading either.',
+    drift: 'Both sides, same workspace. Same ask as the next run, taken at face value.',
+    pushback: 'Same ask as the previous run. Partway through, the architect returns with the agency\u2019s claim that the names reconcile automatically. He holds the finding until he can read evidence for the claim.' };
+  function railState(){
+    document.querySelectorAll('.rail a[data-rail]').forEach(function(a){ var sec = $(a.getAttribute('data-rail')); a.setAttribute('aria-disabled', sec && sec.hidden ? 'true' : 'false'); });
+    $('rail-scen').innerHTML = current ? 'Run <b>' + (RIDES.indexOf(current)+1) + '/' + RIDES.length + '</b> &middot; ' + esc(current.scenario.label) : '';
+  }
+  function renderAfter(){
+    var i = RIDES.indexOf(current), next = RIDES[i+1];
+    var el = $('after'); el.innerHTML = '<span class="lede-sm">End of this ride</span>';
+    var again = document.createElement('button'); again.className = 'btn ghost'; again.textContent = '\u21BB Replay this ride'; again.onclick = function(){ play(false); scrollTo(0, $('ride-sec').offsetTop - 40); };
+    el.appendChild(again);
+    if (next){ var nb = document.createElement('button'); nb.className = 'btn'; nb.textContent = 'Next run: ' + next.scenario.label + ' \u2192'; nb.onclick = function(){ load(next); scrollTo(0, $('ask-sec').offsetTop - 40); }; el.appendChild(nb); }
+    else { var tb = document.createElement('a'); tb.className = 'btn'; tb.href = '/surveyor'; tb.textContent = 'Meet the Surveyor \u2192'; tb.style.textDecoration = 'none'; el.appendChild(tb); }
+  }
   function renderChips(){
     var el = $('chips'); el.innerHTML = '';
     RIDES.forEach(function(r){
@@ -327,6 +376,8 @@
     $('trace').innerHTML = '<div class="empty">Press replay. The recorded run plays back here, step by step.</div>';
     $('bearings-sec').hidden = true; $('handback-sec').hidden = true;
     $('replay-btn').disabled = false;
+    var n = NOTES[r.scenario.key]; $('runnote').hidden = !n; $('runnote').innerHTML = n ? '<b>This run</b>' + esc(n) : '';
+    railState();
   }
   async function play(instant){
     if (!current) return;
@@ -367,15 +418,20 @@
       }
     }
     if (my !== token) return;
-    renderHandback();
+    renderHandback(); renderAfter();
     $('handback-sec').hidden = false;
     $('replay-btn').disabled = false;
+    railState();
   }
   function renderHandback(){
     $('handback').innerHTML = (current.handback || []).map(function(h){ return '<div><span class="k">' + esc(h[0]) + '</span><p>' + h[1] + '</p></div>'; }).join('');
   }
   $('replay-btn').onclick = function(){ play(false); };
   $('skip-btn').onclick = function(){ play(true); };
+  $('jump-pushback').onclick = function(e){ e.preventDefault(); var r = RIDES.filter(function(x){ return x.scenario.key === 'pushback'; })[0] || RIDES[RIDES.length-1]; load(r); play(true); scrollTo(0, $('ask-sec').offsetTop - 40); };
+  document.querySelectorAll('.rail a[data-rail]').forEach(function(a){ a.onclick = function(e){ e.preventDefault(); scrollTo({top: $(a.getAttribute('data-rail')).offsetTop - 48, behavior: reduce ? 'auto' : 'smooth'}); }; });
+  var secs = ['ask-sec','ride-sec','bearings-sec','handback-sec'];
+  addEventListener('scroll', function(){ var y = scrollY + 120, on = null; secs.forEach(function(id){ var s = $(id); if (!s.hidden && s.offsetTop <= y) on = id; }); document.querySelectorAll('.rail a[data-rail]').forEach(function(a){ a.classList.toggle('on', a.getAttribute('data-rail') === on); }); }, {passive:true});
   load(RIDES[0]);
 })();
 </script>
