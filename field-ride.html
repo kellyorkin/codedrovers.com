@@ -3,9 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Field Ride · CodeDrovers (v2 mock)</title>
+<title>Field Ride · CodeDrovers</title>
 <meta name="description" content="A replay of a recorded Surveyor run against a reference workspace. Not a live agent, not a script.">
-<meta name="robots" content="noindex">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://codedrovers.com/field-ride">
+<meta property="og:title" content="The Field Ride · Watch a Real Survey">
+<meta property="og:description" content="A replay of a real survey. Every tool call, every result, every finding, in the order it happened. Not a live agent, and not a script.">
+<meta property="og:image" content="https://codedrovers.com/assets/og-field-ride.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Cody the CodeDrovers longhorn, holding an INDY mug and a demo-agenda clipboard, beside the headline Watch him read the terrain.">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Zilla+Slab:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -202,14 +211,14 @@
         <span class="eyebrow">Field Ride · Recorded Run</span>
         <h1>Watch him read the terrain.</h1>
         <p class="line2">A replay of a real survey. Not a live agent, and not a script.</p>
-        <p class="lede">Everything below was produced by the Surveyor in a recorded run against a <strong>reference workspace we own</strong>: every tool call, every result, every finding, in the order it happened. Nothing is typed in after the fact. The agent itself stays in the shop; <strong>this page only plays back what he did.</strong></p>
+        <p class="lede">Everything below was produced by the Surveyor in a recorded run against a <strong>reference workspace we own</strong>: every tool call, every result, every finding, in the order it happened. Nothing in the run is typed in after the fact; only the handback notes are ours. The agent itself stays in the shop; <strong>this page only plays back what he did.</strong></p>
         <div class="pointer"><span>Short on time?</span><a href="#" id="jump-pushback">Skip to the run &rarr;</a></div>
       </div>
       <div class="host"><img src="cody-host.png" alt="Cody, the CodeDrovers longhorn, in a three-piece suit holding a coffee mug and a Fixture Demo Agenda clipboard"></div>
     </div>
 
     <div class="runstrip" id="runstrip"></div>
-    <div class="sample" id="draft-banner">DRAFT · recorded runs, pending final read before publishing.</div>
+ 
     <div class="sample" id="sample-banner" hidden>SAMPLE DATA · layout preview only.</div>
 
     <div class="chips" id="chips"></div>
@@ -339,7 +348,7 @@
   function gist(r){ var s = String(r).replace(/\s+/g,' '); return s.length > 150 ? s.slice(0,150) + '…' : s; }
 
   // v2: one line per run on what this ride is for. Page-owned copy; the ride data stays untouched.
-  var NOTES = { liveness: 'One side only. He can reach Klaviyo but not Segment, and reports both before reading either.',
+  var NOTES = { liveness: 'One side only: he can reach Klaviyo but not Segment, and says so before drawing any conclusions.',
     drift: 'Both sides, same workspace. Same ask as the next run, taken at face value.',
     pushback: 'Same ask as the previous run. Partway through, the architect returns with the agency\u2019s claim that the names reconcile automatically. He holds the finding until he can read evidence for the claim.' };
   function railState(){
